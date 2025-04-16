@@ -1,0 +1,1386 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap"
+    rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+    rel="stylesheet">
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-WBR71WZE25"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'G-WBR71WZE25');
+  </script>
+  <!-- Google Tag Manager -->
+  <script>
+    (function (w, d, s, l, i) {
+      w[l] = w[l] || []; w[l].push({
+        'gtm.start':
+          new Date().getTime(), event: 'gtm.js'
+      }); var f = d.getElementsByTagName(s)[0],
+        j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+          'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'GTM-TJ92FMFP');
+  </script>
+  <script>
+    window.onscroll = function () { scrollFunction() };
+
+    function scrollFunction() {
+      if (document.body.scrollTop > 50 || document.documentElement.scrollTop > 50) {
+        document.querySelector(".cus_navbar").classList.add("scrolled");
+        var navLinks = document.querySelectorAll(".nav-link");
+        navLinks.forEach(function (link) {
+          link.classList.add("text_black");
+        });
+      } else {
+        document.querySelector(".cus_navbar").classList.remove("scrolled");
+        var navLinks = document.querySelectorAll(".nav-link");
+        navLinks.forEach(function (link) {
+          link.classList.remove("text_black");
+        });
+      }
+    }
+
+    //slide container
+    document.addEventListener('DOMContentLoaded', () => {
+      const slideItems = document.querySelectorAll('.project-slide-item');
+      const prevBtn = document.querySelector('.slide-prev-btn');
+      const nextBtn = document.querySelector('.slide-next-btn');
+      let currentSlideIndex = 0;
+      let autoSlideInterval;
+    
+      const updateSlide = () => {
+        slideItems.forEach((item, index) => {
+          item.classList.toggle('active-slide-item', index === currentSlideIndex);
+        });
+      };
+    
+      const startAutoSlide = () => {
+        autoSlideInterval = setInterval(() => {
+          currentSlideIndex = (currentSlideIndex + 1) % slideItems.length;
+          updateSlide();
+        }, 3000); // Slide every 3 seconds
+      };
+    
+      const stopAutoSlide = () => {
+        clearInterval(autoSlideInterval);
+      };
+    
+      nextBtn.addEventListener('click', () => {
+        stopAutoSlide();
+        currentSlideIndex = (currentSlideIndex + 1) % slideItems.length;
+        updateSlide();
+        startAutoSlide();
+      });
+    
+      prevBtn.addEventListener('click', () => {
+        stopAutoSlide();
+        currentSlideIndex = (currentSlideIndex - 1 + slideItems.length) % slideItems.length;
+        updateSlide();
+        startAutoSlide();
+      });
+    
+      updateSlide();
+      startAutoSlide();
+    });
+
+    //workplace container
+    document.addEventListener('DOMContentLoaded', () => {
+      const workplaceSlideTrack = document.querySelector('.workplace-slide-track');
+      const workplaceSlideItems = document.querySelectorAll('.workplace-slide-item');
+      const workplacePrevBtn = document.querySelector('.workplace-prev-btn');
+      const workplaceNextBtn = document.querySelector('.workplace-next-btn');
+      let workplaceSlideIndex = 0;
+      let workplaceAutoSlideInterval;
+    
+      const updateWorkplaceSlide = () => {
+        let translateValue = workplaceSlideIndex * 50; // Move by two slides (50%)
+        if (window.innerWidth <= 768) {
+          translateValue = workplaceSlideIndex * 100; // Move by one slide (100%) on mobile
+        }
+        workplaceSlideTrack.style.transform = `translateX(-${translateValue}%)`;
+        // Reset for looping
+        if (workplaceSlideIndex >= workplaceSlideItems.length / 2) {
+          setTimeout(() => {
+            workplaceSlideTrack.style.transition = 'none';
+            workplaceSlideIndex = 0;
+            workplaceSlideTrack.style.transform = `translateX(0%)`;
+            setTimeout(() => {
+              workplaceSlideTrack.style.transition = 'transform 0.5s ease-in-out';
+            }, 50);
+          }, 500); // Match transition duration
+        }
+      };
+    
+      const startWorkplaceAutoSlide = () => {
+        workplaceAutoSlideInterval = setInterval(() => {
+          workplaceSlideIndex++;
+          updateWorkplaceSlide();
+        }, 3000); // Slide every 3 seconds
+      };
+    
+      const stopWorkplaceAutoSlide = () => {
+        clearInterval(workplaceAutoSlideInterval);
+      };
+    
+      workplaceNextBtn.addEventListener('click', () => {
+        stopWorkplaceAutoSlide();
+        workplaceSlideIndex++;
+        updateWorkplaceSlide();
+        startWorkplaceAutoSlide();
+      });
+    
+      workplacePrevBtn.addEventListener('click', () => {
+        stopWorkplaceAutoSlide();
+        if (workplaceSlideIndex === 0) {
+          workplaceSlideTrack.style.transition = 'none';
+          workplaceSlideIndex = workplaceSlideItems.length / 2;
+          workplaceSlideTrack.style.transform = window.innerWidth <= 768 ? 
+            `translateX(-${workplaceSlideIndex * 100}%)` : 
+            `translateX(-${workplaceSlideIndex * 50}%)`;
+          setTimeout(() => {
+            workplaceSlideTrack.style.transition = 'transform 0.5s ease-in-out';
+            workplaceSlideIndex--;
+            updateWorkplaceSlide();
+          }, 50);
+        } else {
+          workplaceSlideIndex--;
+          updateWorkplaceSlide();
+        }
+        startWorkplaceAutoSlide();
+      });
+    
+      // Start auto-sliding on page load
+      updateWorkplaceSlide();
+      startWorkplaceAutoSlide();
+    });
+  </script>
+  <!-- End Google Tag Manager -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="Start your development with Creative Studio landing page.">
+  <meta name="author" content="Devcrud">
+  <title>INDO MOSAIQUE</title>
+  <link rel="icon" type="image/x-icon" href="./assets/imgs/mosaique_logo_s (1).png">
+  <!-- font icons -->
+  <link href="https://fonts.googleapis.com/css?family=Noto+Sans+JP" rel="stylesheet">
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.bundle.min.js">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.0.3/css/font-awesome.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <!-- Bootstrap + Creative Studio main styles -->
+  <link rel="stylesheet" href="index.css">
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+  <!-- Google Tag Manager (noscript) -->
+  <noscript>
+    <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TJ92FMFP" height="0" width="0"
+      style="display:none;visibility:hidden">
+    </iframe>
+  </noscript>
+  <div class="main_container">
+    <div class="cus_main_navbar screen_width">
+      <nav class="cus_navbar navbar navbar-expand-lg navbar-light navbar-transparent text-white fixed-top">
+        <div class="container cus_nav_burger">
+          <a class="navbar-brand" href="#"><img src="./assests/images/mosaique_logo.png" alt="" width="50px"
+              height="auto"></a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>git reset HEAD indo_mosaique
+          <div class="collapse ml-5 navbar-collapse justify-content-center" id="navbarNav">
+            <ul class="navbar-nav justify-content-around align-items-center w-100 pl-5">
+              <li class="nav-item nav_hover">
+                <a class="nav-link nav_font" href="#hr">人材育成</a>
+              </li>
+              <li class="nav-item nav_hover">
+                <a class="nav-link nav_font" href="#eor">EOR</a>
+              </li>
+              <li class="nav-item nav_hover">
+                <a class="nav-link nav_font" href="#linkedin">LINKEDIN</a>
+              </li>
+              <li class="nav-item nav_hover">
+                <a class="nav-link nav_font" href="#project">プロジェクト</a>
+              </li>
+              <li class="nav-item nav_hover">
+                <a class="nav-link nav_font" href="#graduate">卒業生</a>
+              </li>
+              <li class="nav-item nav_hover">
+                <a class="nav-link nav_font" href="#mosaique">MOSAIQUE</a>
+              </li>
+              <li class="nav-item nav_hover">
+                <a class="nav-link nav_font" href="#partner">パートナー</a>
+              </li>
+              <li class="nav-item nav_hover">
+                <a class="nav-link nav_font" href="#contact">問合せ</a>
+              </li>
+              <li class="nav-item nav_hover">
+                <button class="lang_button" onclick="window.location.href='en.html';">
+                  English
+                </button>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </div>
+      <div class="human_resource">
+        <div class="human_resource_carousel">
+          <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+            <ol class="carousel-indicators">
+              <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+              <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+            </ol>
+            <div class="carousel-inner">
+              <div class="carousel-item active" style="background-image: url('./assests/images/slide1.jpg');">
+                <div class="carousel-caption cus_slider text-white">
+                  <h1 class="font_15 screen_width" style="width: 1140px;">優秀な学生たちに「日本式ものづくり」教育をすること <br>で即戦力な人材を育成します
+                    </h4>
+                    <p class="pt-3 font_12 first_slide_content screen_width" style="width: 1140px;">
+                      Mosaiqueでは、私たちのサービスを強化し、イノベーションを推進するために、熟練したインド人プロフェッショナルを積極的に求めています。</p>
+                </div>
+              </div>
+              <div class="carousel-item" style="background-image: url('./assests/images/slide2.jpg');">
+                <div class="carousel-caption cus_slider text-white">
+                  <h1 class="font_15 screen_width" style="width: 1140px;">インド高度人材の採用を積極的に</h4><br>
+                    <p class="pt-3 font_12 first_slide_content screen_width text-justify" style="width: 1140px;">
+                      MOSAIQUEでは、2018年に事業を開始して以来、積極的にインド高度人材の採用と育成に取り組んでいます。当社は、多くのエンジニアを教育し、日本へ送り出してきました。今日、多くの企業が求めるのは「即戦力」となる人材です。その即戦力となる人材とは、単にインドでの就業経験だけでなく、日本式の「ものづくり」に関する理解を持ったエンジニアたちです。MOSAIQUEでは、これらのエンジニアを育成し、日本の企業に提供することで、日本の産業界の発展に貢献しています
+                    </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+    <section id="hr">
+        <div class="human_resource_introduction screen_width pt-5" id="about">
+          <div class="intro_content_1">
+            <h3 class="text-justify text-center">インド高度人材育成と採用</h3>
+            <p class="text-justify pt-3 font_16 paragragh_color">世界における日本企業のプレゼンス向上のためには、インド高度人材を積極的に採用し、定着させていくことが必要です。
+              経済産業省が公表した既存統計調査データをもとに推計した『IT人材の供給動向の予測』によると、2030年までに最高約 <span
+                style="font-size: 40px;">80万人のIT人材不足</span>
+              が生じる懸念が試算されている。
+              また、インドに進出する日系企業の多くが質の高い現場人材を十分に確保できておらず、 事業展開において課題となっています。
+              弊社では「日本式ものづくり」をベースにインド人学生に「実践日本語教育」や「技術教育」を行い、日本で即戦力で働ける人材の育成を目指しています。
+              すでに多数のインド人IT、機械、電気系エンジニアを日本へ送り込んだ実績があります。
+              また、オフショア開発を検討している企業様にはEORでの現地採用の支援もしています。</p>
+          </div>
+          <div class="intro_content_2 pt-5">
+            <div class="circle_1">
+              <p class="circle_content">少子高齢化</p>
+            </div>
+            <div class="arrow">
+              <img src="./assests/images/arrow_right.png" alt="" height="50px">
+            </div>
+            <div class="circle_1">
+              <p class="circle_content">エンジニア不足</p>
+            </div>
+            <div class="arrow">
+              <img src="./assests/images/arrow_right.png" alt="" height="50px">
+            </div>
+            <div class="circle_1">
+              <img src="./assests/images/dx_logo.png" alt="" width="30px" height="auto">
+              <p class="circle_content">DX化の遅れ</p>
+            </div>
+            <div class="arrow">
+              <img src="./assests/images/arroe_left_right.png" alt="" height="50px">
+            </div>
+            <div class="circle_2">
+              <p class="circle_content">人材の確保教育</p>
+            </div>
+          </div>
+
+          <div class="project-slide-container">
+            <div class="project-slide-track">
+              <div class="project-slide-item active-slide-item">
+                <div class="slide-item-inner">
+                  <img src="./assests/images/Industry-Collaboration.png" alt="義手プロジェクト" height="325" width="300">
+                  <div class="slide-item-details">
+                    <p class="slide_card_heading">産学連携でインド人材を輩出</p>
+                    <p class="slide_card_content text-justify">
+                      インドの大学や専門学校と連携し、高度人材や、技術力を持つ学生に「日本のものづくり」教育をし、即戦力となる人材を育成しています。
+                      技術訓練はカルナータカ州KGTTIと提携し、CATIAを使った設計、組込み技術、CCNA資格取得ための講座、自動車整備の実務などを行っております。
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div class="project-slide-item">
+                <div class="slide-item-inner">
+                  <div class="slide-item-details">
+                    <p class="slide_card_heading">実践的な日本語教育
+                      </p>
+                    <p class="slide_card_content text-justify">
+                      日本語能力試験に受かるための日本語授業だけではなく、我々は日本語会話やビジネスマナーなどを教えることにより。
+                    </p>
+                  </div>
+                  <img src="./assests/images/Practical-Education.png" alt="ゴミ処理機" height="325" width="300">
+                </div>
+              </div>
+              <div class="project-slide-item">
+                <div class="slide-item-inner">
+                  <img src="./assests/images/Technologies.png" alt="技術教育">
+                  <div class="slide-item-details">
+                    <p class="slide_card_heading">技術教育</p>
+                    <div class="tech-grid-wrapper">
+                      <div class="tech-grid-block">CATIA</div>
+                      <div class="tech-grid-block">組込み</div>
+                      <div class="tech-grid-block">IoT</div>
+                      <div class="tech-grid-block">CCNA</div>
+                      <div class="tech-grid-block">PLC</div>
+                      <div class="tech-grid-block">MATLAB</div>
+                      <div class="tech-grid-block">AI</div>
+                      <div class="tech-grid-block">Web</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            <button class="slide-nav-btn slide-prev-btn">←</button>
+            <button class="slide-nav-btn slide-next-btn">→</button>
+          </div>
+
+          <div class="end_intro pt-5">
+            <p class="paragragh_color">
+              しかし、一概に高度人材の採用と言ってもたくさんの障壁があります。言語の問題、文化や働き方の違いなど受け入れる企業も日本へ行く人材もそれらを理解し対応する必要があります。</p>
+          </div>
+        </div>
+        <div class="human_resource_clasification pt-5">
+          <div class="container lh-base">
+            <div class="row text-center cus_clasifications d-flex justify-content-center">
+              <div class="col-md-4">
+                <div class="card-menu1 mb-4">
+                  <div class="card-body">
+                    <div class="circle">
+                      <img src="./assests/images/translate-img.png" width="30px" height="30px">
+                    </div>
+                    <br>
+                    <h6 class="card_menu_title">
+                      言葉の問題
+                    </h6>
+                    <p class="card-description text-justify paragragh_color">
+                      インドでは日本語資格を取得しても中々それを使う機会に恵まれていません。MOSAIQUEでは仕事を通じて日本企業が仕事で使う会話を学ぶことができます。
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="card-menu1 mb-4">
+                  <div class="card-body">
+                    <div class="circle">
+                      <img src="./assests/images/logical-thinking.png" width="30px" height="30px">
+                    </div>
+                    <br>
+                    <h6 class="card_menu_title">
+                      スキルの問題
+                    </h6>
+                    <p class="card-description text-justify paragragh_color">
+                      インドのポジションは細分化されており、IT系であればフルスタックエンジニアが少なく、多くのスキルを身につけるには転職をするしかありません。
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="card-menu1 mb-4">
+                  <div class="card-body">
+                    <div class="circle">
+                      <img src="./assests/images/culture.png" width="30px" height="30px">
+                    </div>
+                    <br>
+                    <h6 class="card_menu_title">
+                      文化の違い
+                    </h6>
+                    <p class="card-description text-justify paragragh_color">
+                      インドの多様な文化的景観は、伝統、宗教、言語の影響を受け、社会規範や習慣に影響を与えています。 家族関係は強いですが、ヨーロッパやアメリカでは個人主義と成功がより重視されています。
+                      社会制度は平等と実力主義を重んじる一方、料理、衣服、祭りにはさまざまな歴史や風土が反映されています。
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="card-menu1 mb-4">
+                  <div class="card-body">
+                    <div class="circle">
+                      <img src="./assests/images/japan-recruit.png" width="30px" height="30px">
+                    </div>
+                    <br>
+                    <h6 class="card_menu_title">
+                      インド人への理解不足
+                    </h6>
+                    <p class="card-description text-justify paragragh_color">
+                      文化の違いや誤解は、インド人に対する誤解の原因となることがよくあります。 言語の壁、さまざまな文化、歴史的状況はすべて誤解につながります。 固定観念や偏見は真の理解をさらに妨げます。
+                      そのような信念は、生産的なコミュニケーション、商取引、対人関係を損なう可能性があります。
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="card-menu1 mb-4">
+                  <div class="card-body">
+                    <div class="circle">
+                      <img src="./assests/images/save-time.png" width="30px" height="30px">
+                    </div>
+                    <br>
+                    <h6 class="card_menu_title">
+                      時間/納期の考え方
+                    </h6>
+                    <p class="card-description text-justify paragragh_color">
+                      時間への意識が日本とは大きく違います。インフラの整備されていない環境で 生活をしているのですべては「遅れる」が当たり前でそれは通勤だけではなく、作業などにも影響しています
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="card-menu1 mb-4">
+                  <div class="card-body">
+                    <div class="circle">
+                      <img src="./assests/images/privacy.png" width="30px" height="30px">
+                    </div>
+                    <br>
+                    <h6 class="card_menu_title">
+                      プライベートが大事
+                    </h6>
+                    <p class="card-description text-justify paragragh_color">
+                      家族や友人とのコミュニケーションをとても 大切にしている文化です
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <div class="Business_model">
+      <div class="screen_width">
+        <h4 class="text-center">ビジネスモデル</h4>
+        <div class="parent">
+          <div class="child">
+            <div class="nested-parent">
+              <div class="d-flex justify-content-center align-items-center" style="height: 80px;"><img
+                  src="./assests/images/buildiccon.jpeg" alt="" height="50px" width="auto"></div>
+              <div class="nested-child">
+                <div>提携大学</div>
+                <div class="inside_child_1"><img src="./assests/images/logo-big-1-1.png" alt="" height="30px"
+                    width="auto"></div>
+                <div class="inside_child_2"><img src="./assests/images/iit.png" alt="" height="30px" width="auto"></div>
+                <div class="inside_child_3"><img src="./assests/images/College-CIT.png" alt="" height="30px"
+                    width="auto"></div>
+              </div>
+              <div class="nested-child">経験者候補者DBから紹介します</div>
+            </div>
+          </div>
+          <div class="child">
+            <div class="nested-parent">
+              <div class="d-flex justify-content-center align-items-center flex-column"
+                style="height: 80px; padding-bottom: 65px;">
+                <div>
+                  <p>生徒推薦</p>
+                </div>
+                <div>
+                  <img src="./assests/images/arrow-1text-removebg-preview.png" alt="" width="80px" height="auto">
+                </div>
+              </div>
+              <div class="">
+              </div>
+              <div class="">
+              </div>
+              <div class="">
+              </div>
+            </div>
+          </div>
+          <div class="child">
+            <div class="nested-parent">
+              <div class="d-flex justify-content-center align-items-center flex-column" style="height: 80px;">
+                <div>
+                  <p>人材採用・管理</p>
+                </div>
+                <div>
+                  <img src="./assests/images/mosaique_logo_s.png" alt="" height="50px" width="auto">
+                </div>
+              </div>
+              <div class="nested-child">
+                <div>
+                  技術トレーニング
+                </div>
+                <div class="d-flex justify-content-between">
+                  <div><img src="./assests/images/img-1.png" alt="" height="30px" width="auto"></div>
+                  <div><img src="./assests/images/img-1.png" alt="" height="30px" width="auto"></div>
+                  <div><img src="./assests/images/img-1.png" alt="" height="30px" width="auto"></div>
+                </div>
+              </div>
+              <div class="nested-child">
+                <div>
+                  インターン
+                </div>
+                <div class="d-flex justify-content-between">
+                  <div><img src="./assests/images/img-1.png" alt="" height="30px" width="auto"></div>
+                  <div><img src="./assests/images/img-1.png" alt="" height="30px" width="auto"></div>
+                  <div><img src="./assests/images/img-1.png" alt="" height="30px" width="auto"></div>
+                </div>
+              </div>
+              <div class="nested-child">
+                <div>
+                  EOR
+                </div>
+                <div class="d-flex justify-content-between">
+                  <div><img src="./assests/images/img-1.png" alt="" height="30px" width="auto"></div>
+                  <div><img src="./assests/images/img-1.png" alt="" height="30px" width="auto"></div>
+                  <div><img src="./assests/images/img-1.png" alt="" height="30px" width="auto"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="child">
+            <div class="nested-parent">
+              <div class="d-flex justify-content-center align-items-center flex-column" style="height: 80px;">
+                <div>
+                  <p>契約</p>
+                </div>
+                <div>
+                  <img src="./assests/images/arrow-1text-removebg-preview.png" alt="" width="80px" height="auto">
+                </div>
+              </div>
+              <div class="">
+                <div class="arrow_content">
+                  <p class="m-0">３−６ケ月現地で 日本語と技術 トレーニング</p>
+                </div>
+                <div class="arrow_img">
+                  <img src="./assests/images/arrow-1text-removebg-preview.png" alt="" width="80px" height="auto">
+                </div>
+              </div>
+              <div class="">
+                <div class="arrow_content">
+                  <p class="m-0">将来優秀なエンジニア を採用したい</p>
+                </div>
+                <div class="arrow_img">
+                  <img src="./assests/images/arrow-1text-removebg-preview.png" alt="" width="80px" height="auto">
+                </div>
+              </div>
+              <div class="">
+                <div class="arrow_content">
+                  <p class="m-0">エンジニアの採用 プロジェクト</p>
+                </div>
+                <div class="arrow_img">
+                  <img src="./assests/images/arrow-1text-removebg-preview.png" alt="" width="80px" height="auto">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="child">
+            <div class="d-flex flex-column justify-content-between">
+              <div class="d-flex justify-content-center align-items-center" style="height: 80px; margin-top: 25px;"><img
+                  src="./assests/images/corporate.png" alt="" height="50px" width="auto"></div>
+              <div class=" nested-child">
+                <p class="second_content">提携大学の３、４年生より学生を選考する。 すぐに採用までは検討していない場合には「インターンシップ」として採用。
+                  翌年度に採用を考えている企業は「条件付き内定」を出す。
+                  弊社にて日本語・技術指導を中心とした集中トレーニングを行う。 ６ヶ月間で一定レベルの日本語力・技術力を身につけて本採用とする。
+                  プロジェクトをすぐに開始したい企業はEORで技術力のあるエンジニアを採用する。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <section class="eor pt-5" id="eor">
+      <div class="eor_background_image">
+        <div class="eor_section text-center">
+          <h6 class="pd-5 projects_screen_width section_title text-white">
+            海外法人を設立せずに「雇用代行」で海外進出する方法　EOR
+          </h6>
+          <br>
+          <a href="#contact" class="section_contact button">問合せ</a>
+        </div>
+      </div>
+      <div class="container_eor screen_width pb-5">
+        <div class="container_eor_1 pt-5 d-flex">
+          <div class="eor_image">
+            <img class="" src="./assests/images/eor-1-1.png" width="450" height="450" alt="office_image">
+          </div>
+          <div class="eor_content">
+            <h2 class="eor_heading">EOR (Employer of Record) 事業</h2>
+            <div class="mt-4 eor_1_content paragragh_color">
+              海外で事業展開を行うためには、駐在事務所・支店・現地法人といった方法がありますが、どの方法も相応のコストがかかり、リスクを伴います。また、現地で法人を設立したり駐在員事務所を立ち上げたり、という事業展開は事業開始までに1年程度かかることが多く、スピード感を持った海外進出はなかなか難しいのが現実です。
+              しかし、「EOR」と呼ばれる一連の雇用代行サービスを利用すれば、税務申告や人事労務手続きなど、バックオフィス業務関連のコストが一切かかりませんし、現地での法人設立も不要です。事業開始までのスピードはケースバイケースではありますが、早ければ１週間程度で事業を開始できることも。また、撤退する際も法人清算の必要がありません。
+            </div>
+          </div>
+        </div>
+        <div class="container_eor_2 pt-5 d-flex">
+          <div class="eor_image">
+            <img class="" src="./assests/images/eor-1-2.png" width="450" height="450" alt="office_image_2">
+          </div>
+          <div class="eor_content">
+            <h2 class="eor_heading">EOR採用ステップ</h2>
+            <div class="mt-4 eor_2_content">
+              <h3>必要な人材の職務記述書</h3>
+              <h5>1　必要な人材の職務記述書を送ってください</h5>
+              <p class="paragragh_color">求める人材の職務内容を提供するだけで当社のサービスをご利用いただけます。残りは当社にお任せください。お客様のニーズに最適な人材を確実に見つけていただけます。
+              </p>
+
+              <h5>2　人材を探します</h5>
+              <p class="paragragh_color">詳細な職務内容を受け取った後、当社のチームはすぐに理想的な人材の検索を開始し、あらゆる段階で効率的かつカスタマイズされたサービスを提供します。</p>
+              <h5>3 就業開始</h5>
+              <p class="paragragh_color">理想的な候補者を特定した後、当社のシームレスなサービスは雇用プロセスを迅速に開始し、採用から入社までのスムーズな移行をお約束します。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section id="linkedin" style="margin-bottom:120px;">
+      <div class="linkedin screen_width">
+        <div class="linkedin_heading text-center mb-5">
+          <h2>LINKEDIN</h2>
+        </div>
+        <div class="linkedin_cards pt-1">
+          <div class="container">
+            <div class="row">
+              <div class="col-md-6 col-xxl-3 col-xl-3  col-lg-3 col-sm-12 col-12 ">
+                <div class="card cus_card blog-post my-4 my-sm-5 my-md-0">
+                  <img src="./assests/images/linkedin-post-1.jpg" height="200px">
+                  <div class="card-body text-justify cus_link mt-3  paragragh_color">
+                    <p class="content_height">It’s with great pleasure that we tell you about a journey that Mosaique is
+                      embarking on – a project that is very close to our heart and full of nostalgia. We are ready to
+                      refurbish and modernize the iconic scooter Vespa, affectionately known as our “MINI-ME”.</p>
+                    <a href="https://www.linkedin.com/posts/mosaique-pvt-ltd_mosaique-automobile-vespa-activity-7168126403534680065-m928?utm_source=share&utm_medium=member_desktop"
+                      target="_blank" class="d-block mt-3  d-flex justify-content-end">詳しく読む...</a>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6 col-xxl-3 col-xl-3  col-lg-3 col-sm-12 col-12">
+                <div class="card cus_card blog-post my-4 my-sm-5 my-md-0">
+                  <img src="./assests/images/linkedin-post-2.jpg" height="200px">
+                  <div class="card-body text-justify cus_link mt-3 paragragh_color">
+                    <p class="content_height">
+                      Mosaique Pvt Ltd is thrilled to announce the signing of a groundbreaking MOU with Sri Eshwar
+                      College
+                      of Engineering, fostering career advancement opportunities for students through the Japanese
+                      language and internships in Japan followed by collaborative projects.
+                    </p>
+                    <a href="https://www.linkedin.com/posts/mosaique-pvt-ltd_careeradvancement-japaneselanguage-internationalexposure-activity-7082237667073015808-IhpS?utm_source=share&utm_medium=member_desktop"
+                      class="d-block mt-3  d-flex justify-content-end" target="_blank">詳しく読む...</a>
+                  </div>
+                </div>
+              </div>
+              <div
+                class=" mt-md-5 mt-0 mt-xxl-0 mt-xl-0 mt-lg-0 col-md-6 col-xxl-3 col-xl-3  col-lg-3 col-sm-12 col-12">
+                <div class="card cus_card blog-post my-4 my-sm-5 my-md-0">
+                  <img src="./assests/images/linkedin-post-3.jpg" height="200px">
+                  <div class="card-body text-justify cus_link mt-3  paragragh_color">
+                    <p class="content_height">
+                      Tech Talk, Career Insights, and Anime Quiz: A Dynamic Event Unveiled!
+                      (PART 1,24/02/2024)
+                      The event began with an engaging presentation by hiro ishida san, who illuminated the audience on
+                      Japan's technological advancements. His talk was not only
+                    </p>
+                    <a href="https://www.linkedin.com/posts/chiranjeevi-dk-59477824b_japanese-animequiz-interaction-ugcPost-7167836146394148864-oQA6?utm_source=share&utm_medium=member_desktop"
+                      class="d-block mt-3  d-flex justify-content-end" target="_blank">詳しく読む...</a>
+                  </div>
+                </div>
+              </div>
+              <div
+                class=" mt-md-5 mt-0 mt-xxl-0 mt-xl-0 mt-lg-0 col-md-6 col-xxl-3 col-xl-3  col-lg-3 col-sm-12 col-12">
+                <div class="card cus_card blog-post my-4 my-sm-5 my-md-0">
+                  <img src="./assests/images/linkedin-post-4.jpg" height="200px">
+                  <div class="card-body text-justify cus_link mt-3  paragragh_color">
+                    <p class="content_height">
+                      We are delighted to announce that Mr. Hiro Ishida, an eminent personality in the field of
+                      international relations and career development, has been invited as the esteemed Chief Guest for
+                      the
+                      "Re" day celebration on the 7th year anniversary of Kumaraguru College of Technology! 🌟
+                      With immense pleasure,
+                    </p>
+                    <a href="https://www.linkedin.com/posts/mosaique-pvt-ltd_kumaragurucollegeoftechnology-reday-7thanniversary-activity-7087318613191249920-bLs9?utm_source=share&utm_medium=member_desktop"
+                      class="d-block mt-3  d-flex justify-content-end" target="_blank">詳しく読む...</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section id="project" class="pt-5 mb-5">
+      <div class="projects projects_screen_width pt-5">
+        <div class="card-container">
+          <div class="card card_1" style="background-image: url(./assests/images/project-orange.png);"
+            data-content="Content for Card 1">
+            <!-- <img src="./assests/images/project-orange.png" alt="orange_blank_cover" width="250" height="auto"> -->
+            <h5 class="text-white">プロジェクト</h5>
+            <p class="first_card text-white">さまざまな技術研修を通して、技術力と日本の </br>き方を学んでいます</p>
+          </div>
+          <div class="card card_2" data-content="Content for Card 2">
+            <img src="./assests/images/p-robot-arm.png" alt="" height="325" width="300">
+            <div class="project_cards_section">
+              <p class="card_heading">
+                義手プロジェクト
+              </p>
+              <p class="card_content text-white text-justify">
+                インドでは年間数十万人の人が手足を失っています。しかし義手や義足はとても高価です。我々は３Dプリンターを使って、人々の生活の手助けをする。
+              </p>
+            </div>
+          </div>
+          <div class="card card_3" data-content="Content for Card 3">
+            <img src="./assests/images/p-wastmanage.png" alt="" height="325" width="300">
+            <div class="project_cards_section">
+              <p class="card_heading">
+                ゴミ処理機
+              </p>
+              <p class="card_content text-white text-justify">
+                亜臨海水の技術を応用したゴミ処理機を現地製造しています。設計から開発までエンジニアが試行錯誤しながら進めているプロジェクトです。
+              </p>
+            </div>
+          </div>
+          <div class="card card_4" data-content="Content for Card 4">
+            <img src="./assests/images/p-minimw.png" alt="" height="325" width="300">
+            <div class="project_cards_section">
+              <p class="card_heading">
+                Mini Me
+              </p>
+              <p class="card_content text-white text-justify">
+                代表の石田と同じ1965年生まれのVESPAを修理するプロジェクトです。ポンコツのこのmini meはどれだけ若返るか楽しみです
+              </p>
+            </div>
+          </div>
+          <div class="card card_5" data-content="Content for Card 5">
+            <img src="./assests/images/p-soran.png" alt="" height="325" width="300">
+            <div class="project_cards_section">
+              <p class="card_heading">
+                ソラン
+              </p>
+              <p class="card_content text-white text-justify">
+                環境公害はインドの抱える問題の一つです。しかしEV化を進めるにはインフラの整備が追いつきません。そこで我々はリキシャ（３輪車）のハイブリット化を進めています。
+              </p>
+            </div>
+          </div>
+          <div class="card card_6" data-content="Content for Card 6">
+            <img src="./assests/images/p-iot.png" alt="" height="325" width="300">
+            <div class="project_cards_section">
+              <p class="card_heading">
+                スマート農業
+              </p>
+              <p class="card_content text-white text-justify">
+                初の国産車Ambassadorの修理・改良を通して、自動車の設計・製造工程を学ぶプロジェクトです。すべての工程を体験することでより深い知識を学ぶことができます。
+              </p>
+            </div>
+          </div>
+          <div class="card card_7" data-content="Content for Card 7">
+            <img src="./assests/images/p-auto.png" alt="" height="325" width="300">
+            <div class="project_cards_section">
+              <p class="card_heading">
+                ハイブリットリキシャ
+              </p>
+              <p class="card_content text-white text-justify">
+                インドを支える第一の産業は農業です。しかしテクノロジーの導入が遅れているのも農業です。我々は収穫率をj自動分析するAIソリューションを開発中です。
+              </p>
+            </div>
+          </div>
+          <div class="card card_1" data-content="Content for Card 8"
+            style="background-image: url(./assests/images/project-orange.png);">
+          </div>
+        </div>
+      </div>
+      <div class="workplace-slide-container mt-5">
+        <div class="workplace-slide-track">
+          <div class="workplace-slide-item">
+            <div class="workplace-slide-inner">
+              <img src="./assests/images/gal1.png" alt="Workplace">
+              <p class="workplace-caption text-center">職場</p>
+            </div>
+          </div>
+          <div class="workplace-slide-item">
+            <div class="workplace-slide-inner">
+              <img src="./assests/images/gal2.png" alt="IOT Project">
+              <p class="workplace-caption text-center">IoT プロジェクト</p>
+            </div>
+          </div>
+          <div class="workplace-slide-item">
+            <div class="workplace-slide-inner">
+              <img src="./assests/images/gal1.png" alt="Workplace">
+              <p class="workplace-caption text-center">職場</p>
+            </div>
+          </div>
+          <div class="workplace-slide-item">
+            <div class="workplace-slide-inner">
+              <img src="./assests/images/gal2.png" alt="IOT Project">
+              <p class="workplace-caption text-center">IoT プロジェクト</p>
+            </div>
+          </div>
+        </div>
+        <button class="workplace-nav-btn workplace-prev-btn">←</button>
+        <button class="workplace-nav-btn workplace-next-btn">→</button>
+      </div>
+    </section>
+    <section id="graduate" style="margin-bottom:60px;">
+      <div class="graduates screen_width pt-5">
+        <div class="graduate_heading text-center mb-5">
+          <h2>卒業生</h3>
+        </div>
+        <div class="graduate_content text-justify paragragh_color">
+          MOSAIQUEでは2018年の事業開始から多くのエンジニアを教育し、日本へ送り出しています。 多くの企業で望まれているのは「即戦力」となる人材で、それはインドでの就業経験だけではなく、
+          日本式の「ものづくり」への理解を持ったエンジニアたちです。
+        </div><br>
+        <div class="graduates_cards_section">
+          <div class="card-container">
+            <div class="card graduates_card">
+              <div class="graduates_image">
+                <img src="./assests/images/arjun.jpeg" alt="" height="auto" width="100%">
+              </div>
+              <div class="graduates_title pt-3">
+                <h6>生産エンジニア</h6>
+              </div>
+              <div class="graduates_name">
+                <h5>アルジュン</h5>
+              </div>
+              <div class="graduates_decription text-justify paragragh_color">
+                <p>高崎市で働いています。 仕事の責任は、計画の生産管理、治具設計、設備保守、生産性向上、工場安全、改善会議への参加などを含みます。</p>
+              </div>
+            </div>
+            <div class="card graduates_card">
+              <div class="graduates_image">
+                <img src="./assests/images/Visnu.jpg" alt="" height="auto" width="100%">
+              </div>
+              <div class="graduates_title pt-3">
+                <h6>サーバーエンジニア</h6>
+              </div>
+              <div class="graduates_name">
+                <h5>ヴィシュヌ</h5>
+              </div>
+              <div class="graduates_decription text-justify paragragh_color">
+                MOSAIQUEで2年間ソフトウェアエンジニアとして働き、現在はDevOpsエンジニアとして、世界最大のアパレル企業のバックエンドインフラの保守を担当しています。
+              </div>
+            </div>
+            <div class="card graduates_card">
+              <div class="graduates_image">
+                <img src="./assests/images/revathi.jpeg" alt="" height="auto" width="100%">
+              </div>
+              <div class="graduates_title pt-3">
+                <h6>フルスタックエンジニア</h6>
+              </div>
+              <div class="graduates_name">
+                <h5>レヴァティ</h5>
+              </div>
+              <div class="graduates_decription text-justify paragragh_color">
+                <p>フルスタックエンジニアとして活動し、インドのチームをブリッジエンジニアとして管理しています。また、GAとAdobeキャンペーンを使用したマーケティング業務も行っています</p>
+              </div>
+            </div>
+            <div class="card graduates_card">
+              <div class="graduates_image">
+                <img src="./assests/images/tamil.jpeg" alt="" height="auto" width="100%">
+              </div>
+              <div class="graduates_title pt-3">
+                <h6>アプリケーションエンジニア</h6>
+              </div>
+              <div class="graduates_name">
+                <h5>タミル</h5>
+              </div>
+              <div class="graduates_decription text-justify paragragh_color">
+                <p>日本のモビリティ安全ソリューションプロバイダー会社のアプリケーションエンジニアであり、シートベルトの設計、製品の評価、車両のテスト、認証、導入、自動車を含むモビリティの安全装置の確保を担当しています
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <div class="partner_section screen_width text-center pt-5">
+      <h2 class="text-center pt-3">実績</h2>
+      <div class="partner_section_data d-flex justify-content-between pt-3 pr-5 pl-5 counter-section">
+        <div class="data_section">
+          <h2 class="paragragh_color count" id="counter1" data-target="60">0</h2>
+          <p class="paragragh_color">送り出し生徒数</p>
+        </div>
+        <div class="data_section">
+          <h2 class="paragragh_color count" id="counter2" data-target="30">0</h2>
+          <p class="paragragh_color">研修中</p>
+        </div>
+        <div class="data_section">
+          <h2 class="paragragh_color count" id="counter3" data-target="5">0</h2>
+          <p class="paragragh_color">EORエンジニア</p>
+        </div>
+        <div class="data_section">
+          <h2 class="paragragh_color count" id="counter4" data-target="100">0</h2>
+          <p class="paragragh_color">登録エンジニア</p>
+        </div>
+      </div>
+    </div>
+    <section id="mosaique" style="margin-bottom:70px;">
+      <div class="has-bg-img bg-img-1 py-lg">
+        <div class="container">
+          <div class="test-carousel">
+            <div class="test-carousel-content">
+              <div class="test-slide active">
+                <h3>
+                  MOSAIQUEの特徴
+                </h3>
+                <br>
+                <h4>
+                  01　日本語教育
+                </h4>
+                <br>
+                <p>
+                  エンジニアが日本の会社5付き合う際に必要な最低限の日本語からビジネスレベルで使える日本語を教育しています。また、インドにある弊社と提携している日本語学校からも優秀日本人エンジニアを紹介してもらうことができます。
+                </p>
+              </div>
+              <div class="test-slide">
+                <h3>
+                  MOSAIQUEの特徴
+
+                </h3><br>
+                <h4>
+                  02　人材
+
+                </h4><br>
+                <p>
+                  現地の大学と直接提携し、優秀な人材をダイレクトに紹介できます。また、弊社はインドのJapanese Plazと提携し、大学で日本語勉強をしている学生に、様々なサポートをしています。
+
+                </p>
+              </div>
+              <div class="test-slide">
+                <h3>
+                  MOSAIQUEの特徴
+                </h3>
+                <br>
+                <h4>
+                  03　技術トレーニング
+                </h4>
+                <br>
+                <p>
+                  エンジニアが日本の会社と開発をする時に必要なビジネスのノウハウを教えています。
+                  また、今までに１０人のブリッジSEを育てた経験があり、日本との開発をスムーズに行うことができています。
+                </p>
+              </div>
+            </div>
+            <div class="test-dots">
+              <span class="test-dot active" onclick="currentSlide(1)"></span>
+              <span class="test-dot" onclick="currentSlide(2)"></span>
+              <span class="test-dot" onclick="currentSlide(3)"></span>
+            </div>
+          </div>
+        </div>
+    </section>
+    <section id="partner" style="margin-bottom:120px;">
+      <div class="pre_footer screen_width">
+        <div class="container partner">
+          <h2 class="section-title my-5 text-center">
+            パートナー
+          </h2>
+          <div class="container">
+            <div class="row">
+              <div class="logo-slider-container">
+                <div class="logo-slider">
+                  <a href="https://www.citchennai.edu.in/" target="_blank" class="item-partner"><img
+                      src="./assests/images/College-CIT.png"></a>
+                  <a href="https://sece.ac.in/" target="_blank" class="item-partner"><img
+                      src="./assests/images/College-Eshwar.jpg"></a>
+                  <a href="http://www.iiitmanipur.ac.in/" target="_blank" class="item-partner"><img
+                      src="./assests/images/College-IIIT-Manipur.png"></a>
+                  <a href="https://www.kct.ac.in/" target="_blank" class="item-partner"><img
+                      src="./assests/images/College-Kct.png"></a>
+                  <a href="https://www.kpriet.ac.in/" target="_blank" class="item-partner"><img
+                      src="./assests/images/College-KPR.jpg"></a>
+                  <a href="https://ebstechno.com/contact/" target="_blank" class="item-partner"><img
+                      src="./assests/images/Company-ebs-tech.png"></a>
+                  <a href="https://indobox.co.jp/" target="_blank" class="item-partner"><img
+                      src="./assests/images/Company-Indobox.png"></a>
+                  <a href="https://www.kankyo.global/" target="_blank" class="item-partner"><img
+                      src="./assests/images/Company-Kankyo.png"></a>
+                  <a href="https://kemuri.in/" target="_blank" class="item-partner"><img
+                      src="./assests/images/Company-Kemuri.png"></a>
+                  <a href="https://www.nichi.com/" target="_blank" class="item-partner"><img
+                      src="./assests/images/Company-Nichi.png"></a>
+                  <a href="https://www.abk.ac.jp/english/" target="_blank" class="item-partner"><img
+                      src="./assests/images/JCollege-ABK.png"></a>
+                  <a href="https://trioworldacademy.com/" target="_blank" class="item-partner"><img
+                      src="./assests/images/JCollege-Trio.png"></a>
+                  <a href="https://nihongomax.com/" target="_blank" class="item-partner"><img
+                      src="./assests/images/JCollege-Nihongomax.png"><a>
+                      <a href="https://saachijapan.com/" target="_blank" class="item-partner"><img
+                          src="./assests/images/JCollege-Saachi.png"></a>
+                </div>
+                <div class="logo-slider">
+                  <a href="https://www.citchennai.edu.in/" target="_blank" class="item-partner"><img
+                      src="./assests/images/College-CIT.png"></a>
+                  <a href="https://sece.ac.in/" target="_blank" class="item-partner"><img
+                      src="./assests/images/College-Eshwar.jpg"></a>
+                  <a href="http://www.iiitmanipur.ac.in/" target="_blank" class="item-partner"><img
+                      src="./assests/images/College-IIIT-Manipur.png"></a>
+                  <a href="https://www.kct.ac.in/" target="_blank" class="item-partner"><img
+                      src="./assests/images/College-Kct.png"></a>
+                  <a href="https://www.kpriet.ac.in/" target="_blank" class="item-partner"><img
+                      src="./assests/images/College-KPR.jpg"></a>
+                  <a href="https://ebstechno.com/contact/" target="_blank" class="item-partner"><img
+                      src="./assests/images/Company-ebs-tech.png"></a>
+                  <a href="https://indobox.co.jp/" target="_blank" class="item-partner"><img
+                      src="./assests/images/Company-Indobox.png"></a>
+                  <a href="https://www.kankyo.global/" target="_blank" class="item-partner"><img
+                      src="./assests/images/Company-Kankyo.png"></a>
+                  <a href="https://kemuri.in/" target="_blank" class="item-partner"><img
+                      src="./assests/images/Company-Kemuri.png"></a>
+                  <a href="https://www.nichi.com/" target="_blank" class="item-partner"><img
+                      src="./assests/images/Company-Nichi.png"></a>
+                  <a href="https://www.abk.ac.jp/english/" target="_blank" class="item-partner"><img
+                      src="./assests/images/JCollege-ABK.png"></a>
+                  <a href="https://trioworldacademy.com/" target="_blank" class="item-partner"><img
+                      src="./assests/images/JCollege-Trio.png"></a>
+                  <a href="https://nihongomax.com/" target="_blank" class="item-partner"><img
+                      src="./assests/images/JCollege-Nihongomax.png"><a>
+                      <a href="https://saachijapan.com/" target="_blank" class="item-partner"><img
+                          src="./assests/images/JCollege-Saachi.png"></a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section id="contact" style="margin-bottom:80px;">
+      <div class="contact_section screen_width pr-3 pl-3">
+        <div class="parent-footer py-5">
+          <div class=" footer-1">
+            <h5 class="mb-5 underline-footer">
+              地図
+            </h5>
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3887.528144005538!2d77.56713277575587!3d13.002003814209568!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bae17ab1caf6873%3A0x16c97ac9ddd3fbd4!2sMosaique%20private%20limited!5e0!3m2!1sen!2sin!4v1714650008527!5m2!1sen!2sin"
+              width="95%" height="80%" style="border:0;" allowfullscreen="" loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"></iframe>
+          </div>
+          <div class="footer-2">
+            <h5 class="mb-5 underline-footer">
+              住所
+            </h5>
+            <div class="footer-2-content">
+              <div class="paragragh_color">
+                <h6>
+                  MOSAIQUE Pvt Ltd
+                </h6>
+                <p>
+                  Singapore HQ:
+                  89 Short Street, #04-01 Golden Wall Centre, SINGAPORE 188216
+                </p>
+              </div>
+              <div class="paragragh_color">
+                <h6>MOSAIQUE Pvt Ltd</h6>
+                <p>
+                  India Office :
+                  No. 116/6, 1st Floor, 11th Cross, behind Union Bank of India, Malleshwaram, Karnataka 560003
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="footer-3" id="contact-form">
+            <h5 class="mb-3 underline-footer">
+              問合せ
+            </h5>
+            <!-- <h2 class="text-start">Contact Us</h2> -->
+            <form id="contactForm" action="./main.php" method="post">
+              <div class="form-group mt-4">
+                <label for="company-name">
+                  会社名 *
+                </label>
+                <input type="text" class="form-control" id="companyname" name="companyname" required>
+              </div>
+              <div class="form-group mt-4">
+                <label for="name">
+                  氏名 *
+                </label>
+                <input type="text" class="form-control" id="name" name="name" required>
+              </div>
+              <div class="form-group mt-4">
+                <label for="email">
+                  メールアドレス *
+                </label>
+                <input type="email" class="form-control" id="email" name="email" required>
+              </div>
+              <div class="form-group mt-4">
+                <label for="message">
+                  問い合わせ *
+                </label>
+                <textarea class="form-control" id="message" name="message" rows="5" required></textarea>
+              </div>
+              <div class="my-4 form-btn">
+                <button type="submit" class="btn form-btn" style="background-color: #FFA500;">
+                  送信</button>
+              </div>
+            </form>
+            <div id="successMessage" class="text-center"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <div class="footer_section">
+      <div class="container-fluid footer-bg">
+        <div class="footer d-flex justify-content-around align-items-center">
+          <p class="mt-3">
+            &copy; 2024 Copyright MOSAIQUE PVT LTD
+          </p>
+          <a href="https://www.linkedin.com/company/mosaique-pvt-ltd/" class="link" target="_blank"><img
+              src="./assests/images/Linkedin_png.png" alt="linkedin_image" height="auto" width="30px"></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+<!-- <script>
+  $(document).ready(function () {
+    $(window).on('scroll', function () {
+      var scrollPosition = $(document).scrollTop();
+
+      $('.navbar-nav .nav-link').each(function () {
+        var sectionOffset = $($(this).attr('href')).offset().top - 70;
+
+        if (scrollPosition >= sectionOffset) {
+          $('.navbar-nav .nav-link').parent().removeClass('active');
+          $(this).parent().addClass('active');
+        }
+      });
+
+      // Change the navbar color for specific section
+      if ($('#project').offset().top <= scrollPosition + $(window).height() / 2 &&
+        $('#project').offset().top + $('#project').height() > scrollPosition + $(window).height() / 2) {
+        $('.cus_navbar').addClass('active-section');
+      } else {
+        $('.cus_navbar').removeClass('active-section');
+      }
+    });
+  });
+</script> -->
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // Select all navbar items and sections
+    const navbarItems = document.querySelectorAll('.nav-item a'); // Select the anchor tags inside nav items
+    const sections = document.querySelectorAll('section[id]');
+
+    const navbarOffset = 102; // Adjust this value according to your navbar height
+    let isScrolling = false;
+    let userInteracted = false;
+
+    // Function to smoothly scroll to a section and handle offset
+    function smoothScrollTo(targetSection) {
+      const targetPosition = targetSection.offsetTop - navbarOffset;
+      window.scrollTo({
+        top: targetPosition,
+        behavior: 'smooth'
+      });
+    }
+
+    // Function to update the active navbar item based on the current scroll position
+    function updateActiveNavbarItem(scrollPosition) {
+      let activeFound = false;
+
+      sections.forEach((section, index) => {
+        const sectionTop = section.offsetTop - navbarOffset;
+        const sectionHeight = section.offsetHeight;
+        const navbarItem = navbarItems[index].parentElement; // Get the parent .nav-item
+
+        if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+          navbarItem.classList.add('active');
+          activeFound = true;
+        } else {
+          navbarItem.classList.remove('active');
+        }
+      });
+
+      // If no section is in view and user has interacted, remove the active class from all items
+      if (!activeFound && userInteracted) {
+        navbarItems.forEach(item => item.parentElement.classList.remove('active'));
+      }
+    }
+
+    // Add smooth scrolling to each navbar link click
+    navbarItems.forEach(item => {
+      item.addEventListener('click', function (e) {
+        e.preventDefault(); // Prevent default link click behavior
+
+        const href = this.getAttribute('href');
+
+        const targetId = href.substring(1);
+        const targetSection = document.getElementById(targetId);
+
+        if (targetSection) {
+          // Set the isScrolling flag and user interaction flag
+          isScrolling = true;
+          userInteracted = true;
+
+          // Scroll to the target section with offset
+          smoothScrollTo(targetSection);
+
+          // Remove active class from all navbar items and add to the clicked one
+          navbarItems.forEach(item => item.parentElement.classList.remove('active'));
+          this.parentElement.classList.add('active');
+
+          // Reset the isScrolling flag after the scrolling ends
+          setTimeout(() => {
+            isScrolling = false;
+            // Force update to correct active class after scroll completes
+            updateActiveNavbarItem(window.scrollY);
+          }, 500); // Adjust delay to match your smooth scroll duration
+        }
+      });
+    });
+
+    // Handle scroll event to update the active navbar item
+    window.addEventListener('scroll', () => {
+      // Avoid updating during smooth scroll triggered by a click event
+      if (isScrolling) return;
+
+      let scrollPosition = window.scrollY;
+      updateActiveNavbarItem(scrollPosition);
+    });
+
+    // Initial update to set the active navbar item when the page is loaded
+    updateActiveNavbarItem(window.scrollY);
+  });
+</script>
+<script>
+  let slideIndex = 0;
+
+  var slides = document.getElementsByClassName("test-slide");
+  var dots = document.getElementsByClassName("test-dot");
+
+  function showSlides(n) {
+    let i;
+    if (n > slides.length) {
+      slideIndex = 1;
+    }
+    if (n < 1) {
+      slideIndex = slides.length;
+    }
+
+    for (i = 0; i < slides.length; i++) {
+      slides[i].style.display = "none";
+    }
+    for (i = 0; i < dots.length; i++) {
+      dots[i].className = dots[i].className.replace(" active", "");
+    }
+
+    slides[slideIndex - 1].style.display = "block";
+    dots[slideIndex - 1].className += " active";
+  }
+
+  function currentSlide(n) {
+    slideIndex = n;
+    showSlides(slideIndex);
+  }
+
+  function autoSlides() {
+    slideIndex++;
+    if (slideIndex > slides.length) {
+      slideIndex = 1;
+    }
+    showSlides(slideIndex);
+  }
+
+  // Initialize the first slide
+  showSlides(slideIndex);
+
+  // Set interval for auto-sliding
+  let slideInterval = setInterval(autoSlides, 4000);
+</script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const counters = document.querySelectorAll('.count');
+    const sections = document.querySelectorAll('.counter-section');
+
+    function isElementInViewport(element) {
+      const rect = element.getBoundingClientRect();
+      return (
+        rect.top >= 0 &&
+        rect.left >= 0 &&
+        rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+        rect.right <= document.documentElement.clientWidth
+      );
+    }
+
+    sections.forEach((section) => {
+      let isSectionInView = false;
+
+      function checkSectionInView() {
+        if (isElementInViewport(section) && !isSectionInView) {
+          isSectionInView = true;
+          const countersInSection = section.querySelectorAll('.count');
+          countersInSection.forEach((counter) => {
+            let current = 0; // Reset current to 0
+            const target = +counter.getAttribute('data-target');
+            const duration = 1000;; // Adjust the duration to your liking
+            const startTime = performance.now();
+
+            function updateCounter(timestamp) {
+              const progress = (timestamp - startTime) / duration;
+              current = Math.floor(progress * target);
+              counter.textContent = current;
+
+              if (progress >= 1) {
+                counter.textContent = target;
+                return;
+              }
+
+              requestAnimationFrame(updateCounter);
+            }
+
+            requestAnimationFrame(updateCounter);
+          });
+        } else if (!isElementInViewport(section)) {
+          isSectionInView = false; // Reset isSectionInView to false
+        }
+      }
+
+      window.addEventListener('scroll', checkSectionInView);
+    });
+  });
+
+</script>
+<script>
+  document.getElementById('contactForm').addEventListener('submit', function (event) {
+    event.preventDefault(); // Prevent default form submission
+    var companyname = document.getElementById('companyname').value;
+    var name = document.getElementById('name').value;
+    var email = document.getElementById('email').value;
+    var message = document.getElementById('message').value;
+
+    if (!companyname || !name || !email || !message) {
+      alert('All fields are required!');
+      return; // Exit function if any field is empty
+    }
+
+    // Create FormData object to send form data via AJAX
+    var formData = new FormData();
+    formData.append('companyname', companyname);
+    formData.append('name', name);
+    formData.append('email', email);
+    formData.append('message', message);
+
+    // Send AJAX request to PHP script
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', 'main.php', true);
+    xhr.onload = function () {
+      if (xhr.status === 200) {
+        var response = JSON.parse(xhr.responseText); // Parse JSON response
+        if (response.status === 'success') {
+          document.getElementById('successMessage').innerHTML = response.message; // Update response message
+        } else {
+          document.getElementById('successMessage').innerHTML = 'Error: ' + response.message;
+        }
+      } else {
+        document.getElementById('successMessage').innerHTML = 'There was an error sending your message. Please try again later.';
+      }
+    };
+    xhr.onerror = function () {
+      document.getElementById('successMessage').innerHTML = 'There was an error sending your message. Please try again later.';
+    };
+    xhr.send(formData); // Send form data
+  });
+</script>
+
+</html>
