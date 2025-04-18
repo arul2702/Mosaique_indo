@@ -84,76 +84,89 @@
       startAutoSlide();
     });
 
-    //workplace container
+    //gallery container
     document.addEventListener('DOMContentLoaded', () => {
-      const workplaceSlideTrack = document.querySelector('.workplace-slide-track');
-      const workplaceSlideItems = document.querySelectorAll('.workplace-slide-item');
-      const workplacePrevBtn = document.querySelector('.workplace-prev-btn');
-      const workplaceNextBtn = document.querySelector('.workplace-next-btn');
-      let workplaceSlideIndex = 0;
-      let workplaceAutoSlideInterval;
+      const track = document.querySelector('.gallery-slide-track');
+      const prevBtn = document.querySelector('.gallery-prev-btn');
+      const nextBtn = document.querySelector('.gallery-next-btn');
+      let slides = document.querySelectorAll('.gallery-slide-item');
     
-      const updateWorkplaceSlide = () => {
-        let translateValue = workplaceSlideIndex * 50; // Move by two slides (50%)
-        if (window.innerWidth <= 768) {
-          translateValue = workplaceSlideIndex * 100; // Move by one slide (100%) on mobile
-        }
-        workplaceSlideTrack.style.transform = `translateX(-${translateValue}%)`;
-        // Reset for looping
-        if (workplaceSlideIndex >= workplaceSlideItems.length / 2) {
-          setTimeout(() => {
-            workplaceSlideTrack.style.transition = 'none';
-            workplaceSlideIndex = 0;
-            workplaceSlideTrack.style.transform = `translateX(0%)`;
-            setTimeout(() => {
-              workplaceSlideTrack.style.transition = 'transform 0.5s ease-in-out';
-            }, 50);
-          }, 500); // Match transition duration
-        }
-      };
+      let currentIndex = 0;
+      let slideWidth = slides[0].offsetWidth;
+      let interval;
+      let isTransitioning = false;
     
-      const startWorkplaceAutoSlide = () => {
-        workplaceAutoSlideInterval = setInterval(() => {
-          workplaceSlideIndex++;
-          updateWorkplaceSlide();
-        }, 3000); // Slide every 3 seconds
-      };
+      function setInitialPosition() {
+        slideWidth = slides[0].offsetWidth;
+        track.style.transition = 'none';
+        track.style.transform = `translateX(-${slideWidth * currentIndex}px)`;
+      }
     
-      const stopWorkplaceAutoSlide = () => {
-        clearInterval(workplaceAutoSlideInterval);
-      };
+      setTimeout(setInitialPosition, 50);
     
-      workplaceNextBtn.addEventListener('click', () => {
-        stopWorkplaceAutoSlide();
-        workplaceSlideIndex++;
-        updateWorkplaceSlide();
-        startWorkplaceAutoSlide();
-      });
+      function moveToSlide(index, withTransition = true) {
+        if (isTransitioning) return;
+        isTransitioning = true;
     
-      workplacePrevBtn.addEventListener('click', () => {
-        stopWorkplaceAutoSlide();
-        if (workplaceSlideIndex === 0) {
-          workplaceSlideTrack.style.transition = 'none';
-          workplaceSlideIndex = workplaceSlideItems.length / 2;
-          workplaceSlideTrack.style.transform = window.innerWidth <= 768 ? 
-            `translateX(-${workplaceSlideIndex * 100}%)` : 
-            `translateX(-${workplaceSlideIndex * 50}%)`;
-          setTimeout(() => {
-            workplaceSlideTrack.style.transition = 'transform 0.5s ease-in-out';
-            workplaceSlideIndex--;
-            updateWorkplaceSlide();
-          }, 50);
+        if (withTransition) {
+          track.style.transition = 'transform 0.6s ease';
         } else {
-          workplaceSlideIndex--;
-          updateWorkplaceSlide();
+          track.style.transition = 'none';
         }
-        startWorkplaceAutoSlide();
+    
+        currentIndex = index;
+        track.style.transform = `translateX(-${slideWidth * index}px)`;
+      }
+    
+      function fadeJump(index) {
+        track.style.transition = 'opacity 0.4s ease';
+        track.style.opacity = '0';
+        setTimeout(() => {
+          moveToSlide(index, false);
+          track.style.transition = 'opacity 0.4s ease';
+          track.style.opacity = '1';
+        }, 400);
+      }
+    
+      function goToNext() {
+        if (currentIndex < slides.length - 1) {
+          moveToSlide(currentIndex + 1);
+        } else {
+          fadeJump(0); // Loop to first
+        }
+      }
+    
+      function goToPrev() {
+        if (currentIndex > 0) {
+          moveToSlide(currentIndex - 1);
+        } else {
+          fadeJump(slides.length - 1); // Loop to last
+        }
+      }
+    
+      nextBtn.addEventListener('click', goToNext);
+      prevBtn.addEventListener('click', goToPrev);
+    
+      track.addEventListener('transitionend', () => {
+        isTransitioning = false;
       });
     
-      // Start auto-sliding on page load
-      updateWorkplaceSlide();
-      startWorkplaceAutoSlide();
+      // Auto slide
+      function startAutoSlide() {
+        interval = setInterval(goToNext, 3000);
+      }
+    
+      function stopAutoSlide() {
+        clearInterval(interval);
+      }
+    
+      track.addEventListener('mouseenter', stopAutoSlide);
+      track.addEventListener('mouseleave', startAutoSlide);
+      window.addEventListener('resize', setInitialPosition);
+    
+      startAutoSlide();
     });
+    
   </script>
   <!-- End Google Tag Manager -->
   <meta charset="utf-8">
@@ -233,10 +246,11 @@
     </div>
       <div class="human_resource">
         <div class="human_resource_carousel">
-          <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+          <div id="carouselExampleIndicators" class="carousel slide carousel-fade" data-ride="carousel" data-interval="4000">
             <ol class="carousel-indicators">
               <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
               <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+              <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
             </ol>
             <div class="carousel-inner">
               <div class="carousel-item active"
@@ -251,6 +265,13 @@
                     style="width: 1140px; margin: 0 auto; padding-left: 15px;">At Mosaique, we are
                     actively seeking skilled Indian professionals to enhance our
                     services and drive innovation.</p>
+                </div>
+              </div>
+              <div class="carousel-item" style="background-image: url('./assests/images/slide3.png');">
+                <div class="carousel-caption cus_slider text-white">
+                  <h4 class="font_15 screen_width" style="width: 1140px;">Producing Indian talent through industry-academia collaboration</h4>
+                    <p class="pt-3 font_12 first_slide_content screen_width" style="width: 1140px;">
+                      We collaborate with universities and vocational schools in India to educate highly skilled and technically skilled personnel on "Japanese manufacturing" and develop workforce that can immediately contribute to the company.</p>
                 </div>
               </div>
               <div class="carousel-item"
@@ -341,7 +362,7 @@
                       Not only do we offer Japanese lessons aimed at passing the Japanese Language Proficiency Test (JLPT), but we also teach Japanese conversation and business etiquette...
                     </p>
                   </div>
-                  <img src="./assests/images/Practical-Education.png" alt="ゴミ処理機" height="325" width="300">
+                  <img src="./assests/images/Practical-Education.jpg" alt="ゴミ処理機" height="325" width="300">
                 </div>
               </div>
               <div class="project-slide-item">
@@ -867,35 +888,114 @@
           </div>
         </div>
       </div>
-      <div class="workplace-slide-container mt-5">
-        <div class="workplace-slide-track">
-          <div class="workplace-slide-item">
-            <div class="workplace-slide-inner">
-              <img src="./assests/images/gal1.png" alt="Workplace">
-              <p class="workplace-caption text-center">Workplace</p>
+      <div class="gallery-slide-container mt-5">
+        <h2 class="text-center" style="font-weight:400;padding:20px">Gallery</h2>
+        <div class="gallery-slide-track">
+          <div class="gallery-slide-item">
+            <div class="gallery-slide-inner">
+              <img src="./assests/images/gal1.png" alt="gallery">
+              <p class="gallery-caption text-center">gallery</p>
             </div>
           </div>
-          <div class="workplace-slide-item">
-            <div class="workplace-slide-inner">
+          <div class="gallery-slide-item">
+            <div class="gallery-slide-inner">
               <img src="./assests/images/gal2.png" alt="IOT Project">
-              <p class="workplace-caption text-center">IOT Project</p>
+              <p class="gallery-caption text-center">IOT Project</p>
             </div>
           </div>
-          <div class="workplace-slide-item">
-            <div class="workplace-slide-inner">
-              <img src="./assests/images/gal1.png" alt="Workplace">
-              <p class="workplace-caption text-center">Workplace</p>
+          <div class="gallery-slide-item">
+            <div class="gallery-slide-inner">
+              <img src="./assests/images/gal3.jpeg" alt="gallery">
+              <p class="gallery-caption text-center">職場</p>
             </div>
           </div>
-          <div class="workplace-slide-item">
-            <div class="workplace-slide-inner">
-              <img src="./assests/images/gal2.png" alt="IOT Project">
-              <p class="workplace-caption text-center">IOT Project</p>
+          <div class="gallery-slide-item">
+            <div class="gallery-slide-inner">
+              <img src="./assests/images/gal4.jpeg" alt="IOT Project">
+              <p class="gallery-caption text-center">IoT プロジェクト</p>
+            </div>
+          </div>
+          <div class="gallery-slide-item">
+            <div class="gallery-slide-inner">
+              <img src="./assests/images/gal5.jpeg" alt="IOT Project">
+              <p class="gallery-caption text-center">IoT プロジェクト</p>
+            </div>
+          </div>
+          <div class="gallery-slide-item">
+            <div class="gallery-slide-inner">
+              <img src="./assests/images/gal6.jpeg" alt="IOT Project">
+              <p class="gallery-caption text-center">IoT プロジェクト</p>
+            </div>
+          </div>
+          <div class="gallery-slide-item">
+            <div class="gallery-slide-inner">
+              <img src="./assests/images/gal7.jpeg" alt="IOT Project">
+              <p class="gallery-caption text-center">IoT プロジェクト</p>
+            </div>
+          </div>
+          <div class="gallery-slide-item">
+            <div class="gallery-slide-inner">
+              <img src="./assests/images/gal8.jpeg" alt="IOT Project">
+              <p class="gallery-caption text-center">IoT プロジェクト</p>
+            </div>
+          </div>
+          <div class="gallery-slide-item">
+            <div class="gallery-slide-inner">
+              <img src="./assests/images/gal9.jpeg" alt="IOT Project">
+              <p class="gallery-caption text-center">IoT プロジェクト</p>
+            </div>
+          </div>
+          <div class="gallery-slide-item">
+            <div class="gallery-slide-inner">
+              <img src="./assests/images/gal10.jpeg" alt="IOT Project">
+              <p class="gallery-caption text-center">IoT プロジェクト</p>
+            </div>
+          </div>
+          <div class="gallery-slide-item">
+            <div class="gallery-slide-inner">
+              <img src="./assests/images/gal11.png" alt="IOT Project">
+              <p class="gallery-caption text-center">IoT プロジェクト</p>
+            </div>
+          </div>
+          <div class="gallery-slide-item">
+            <div class="gallery-slide-inner">
+              <img src="./assests/images/gal12.jpeg" alt="IOT Project">
+              <p class="gallery-caption text-center">IoT プロジェクト</p>
+            </div>
+          </div>
+          <div class="gallery-slide-item">
+            <div class="gallery-slide-inner">
+              <img src="./assests/images/gal13.jpeg" alt="IOT Project">
+              <p class="gallery-caption text-center">IoT プロジェクト</p>
+            </div>
+          </div>
+          <div class="gallery-slide-item">
+            <div class="gallery-slide-inner">
+              <img src="./assests/images/gal14.jpeg" alt="IOT Project">
+              <p class="gallery-caption text-center">IoT プロジェクト</p>
+            </div>
+          </div>
+          <div class="gallery-slide-item">
+            <div class="gallery-slide-inner">
+              <img src="./assests/images/gal15.jpeg" alt="IOT Project">
+              <p class="gallery-caption text-center">IoT プロジェクト</p>
+            </div>
+          </div>
+          <div class="gallery-slide-item">
+            <div class="gallery-slide-inner">
+              <img src="./assests/images/gal16.jpeg" alt="IOT Project">
+              <p class="gallery-caption text-center">IoT プロジェクト</p>
+            </div>
+          </div>
+          <div class="gallery-slide-item">
+            <div class="gallery-slide-inner">
+              <img src="./assests/images/gal17.jpeg" alt="IOT Project">
+              <p class="gallery-caption text-center">IoT プロジェクト</p>
             </div>
           </div>
         </div>
-        <button class="workplace-nav-btn workplace-prev-btn">←</button>
-        <button class="workplace-nav-btn workplace-next-btn">→</button>
+        <button class="gallery-nav-btn gallery-prev-btn">←</button>
+        <button class="gallery-nav-btn gallery-next-btn">→</button>
       </div>
     </section>
   
@@ -1054,7 +1154,7 @@
               <div class="logo-slider-container">
                 <div class="logo-slider">
                   <a href="https://www.citchennai.edu.in/" target="_blank" class="item-partner"><img
-                      src="./assests/images/College-CIT.png"></a>
+                      src="./assests/images/CIT-Logo.png" width="100px"></a>
                   <a href="https://sece.ac.in/" target="_blank" class="item-partner"><img
                       src="./assests/images/College-Eshwar.jpg"></a>
                   <a href="http://www.iiitmanipur.ac.in/" target="_blank" class="item-partner"><img
@@ -1079,12 +1179,18 @@
                       src="./assests/images/JCollege-Trio.png"></a>
                   <a href="https://nihongomax.com/" target="_blank" class="item-partner"><img
                       src="./assests/images/JCollege-Nihongomax.png"><a>
-                      <a href="https://saachijapan.com/" target="_blank" class="item-partner"><img
+                  <a href="https://saachijapan.com/" target="_blank" class="item-partner"><img
                           src="./assests/images/JCollege-Saachi.png"></a>
+                  <a href="https://nitte.edu.in/>" target="_blank" class="item-partner"><img
+                          src="./assests/images/NITTE-Logo.png" width="150px"></a>  
+                  <a href="https://srmeaswari.ac.in/>" target="_blank" class="item-partner"><img
+                          src="./assests/images/Easwari-Logo.png" width="250px"></a> 
+                  <a href="https://www.kgtti.com/" target="_blank" class="item-partner"><img
+                          src="./assests/images/KGTTI-Logo.png" width="100px"></a> 
                 </div>
                 <div class="logo-slider">
                   <a href="https://www.citchennai.edu.in/" target="_blank" class="item-partner"><img
-                      src="./assests/images/College-CIT.png"></a>
+                      src="./assests/images/CIT-Logo.png" width="100px"></a>
                   <a href="https://sece.ac.in/" target="_blank" class="item-partner"><img
                       src="./assests/images/College-Eshwar.jpg"></a>
                   <a href="http://www.iiitmanipur.ac.in/" target="_blank" class="item-partner"><img
@@ -1111,6 +1217,12 @@
                       src="./assests/images/JCollege-Nihongomax.png"><a>
                       <a href="https://saachijapan.com/" target="_blank" class="item-partner"><img
                           src="./assests/images/JCollege-Saachi.png"></a>
+                          <a href="https://nitte.edu.in/>" target="_blank" class="item-partner"><img
+                          src="./assests/images/NITTE-Logo.png" width="150px"></a>  
+                      <a href="https://srmeaswari.ac.in/>" target="_blank" class="item-partner"><img
+                          src="./assests/images/Easwari-Logo.png" width="250px"></a> 
+                      <a href="https://www.kgtti.com/" target="_blank" class="item-partner"><img
+                          src="./assests/images/KGTTI-Logo.png" width="100px"></a> 
                 </div>
               </div>
             </div>
