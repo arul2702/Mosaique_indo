@@ -1114,6 +1114,171 @@ div.has-bg-img {
     background: rgba(0, 0, 0, 0.9);
   }
   
+  
+  /* employee - team  */
+  .employee-section {
+    padding: 50px;
+    background-color: #f9f9f9;
+    text-align: center;
+  }
+  
+  .employee-heading {
+    font-size: 2rem;
+    margin-bottom: 30px;
+    color: #333;
+  }
+  
+  .employee-card-container {
+    display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 40px;
+  padding: 40px;
+  }
+  
+  .employee-card {
+    flex: 1 1 calc(25% - 40px); /* 4 cards per row minus gap */
+    max-width: calc(25% - 40px);
+    box-sizing: border-box;
+    border-radius: 10px;
+    height: 350px; /* or any fixed height you prefer */
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  }
+  
+  .employee-card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.6s ease;
+    transform-style: preserve-3d;
+  }
+  
+  .employee-card:hover .employee-card-inner {
+    transform: rotateY(180deg);
+  }
+  
+  .employee-card-front,
+  .employee-card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    overflow: hidden;
+    backface-visibility: hidden;
+  }
+  
+  .employee-card-front img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .employee-card-back {
+    /* background-color: #0077b6; */
+    background-color: white;
+    color: #000;
+    padding: 20px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    border-radius: 12px;
+    transform: rotateY(180deg);
+    backface-visibility: hidden;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    box-shadow: rgba(255, 255, 255, 0.1) 0px 1px 1px 0px inset, rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
+  }
+
+  .employee-card-back .content-wrapper {
+    flex: 1;
+  }
+  .employee-card-back h3 {
+    margin-top: 0;
+    font-size: 22px;
+    font-weight: 600;
+    color: #000;
+  }
+  
+  .employee-card-back .employee-card-role {
+    font-size: 14px;
+    color: #14a2a2;
+    /* text-transform: uppercase; */
+    margin: 5px 0 15px;
+    letter-spacing: 1px;
+  }
+
+  .employee-card-para {
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 400; /* Regular weight */
+    font-size: 16px;  /* Adjust size as needed */
+}
+
+.employee-card-quote {
+    font-family: 'Lora', serif;
+    font-weight: 400; /* Regular weight */
+    font-size: 15px;  /* Adjust size as needed */
+    font-style: italic; /* Optional for added emphasis */
+}
+.employee-card-back h4{
+    font-size: 14px;
+    font-weight: 600;
+}
+  
+  .social-icon-linkedin {
+    align-self: center;
+    margin-top: auto;
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    overflow: hidden;
+    text-align: center;
+  }
+  
+  .social-icon-linkedin i {
+    font-size: 32px;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    transition: transform 0.3s;
+    color: #0a66c2;
+  }
+  
+  .icon-top {
+    top: 0;
+  }
+  
+  .icon-bottom {
+    top: 100%;
+  }
+  
+  .social-icon-linkedin:hover .icon-top {
+    transform: translate(-50%, -100%);
+  }
+  
+  .social-icon-linkedin:hover .icon-bottom {
+    transform: translate(-50%, -100%);
+  }
+
+
+
+
+  @media (max-width: 1024px) {
+    .employee-card {
+      flex: 1 1 calc(50% - 40px);
+      max-width: calc(50% - 40px);
+    }
+  }
+  
+  @media (max-width: 600px) {
+    .employee-card {
+      flex: 1 1 100%;
+      max-width: 100%;
+    }
+  }
+
+
   /* Responsive Styles */
   @media (max-width: 768px) {
     .tech-grid-wrapper {
