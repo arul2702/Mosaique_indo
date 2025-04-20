@@ -573,7 +573,7 @@ div.has-bg-img {
 }
 
 .footer-3 form .btn {
-    position: absolute;
+    /* position: absolute; */
     top: 10px;
     left: 50%;
     transform: translate(-50%, -50%);

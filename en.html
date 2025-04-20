@@ -1799,6 +1799,7 @@
         var response = JSON.parse(xhr.responseText); // Parse JSON response
         if (response.status === 'success') {
           document.getElementById('successMessage').innerHTML = response.message; // Update response message
+          document.getElementById("contactForm").reset();
         } else {
           document.getElementById('successMessage').innerHTML = 'Error: ' + response.message;
         }
