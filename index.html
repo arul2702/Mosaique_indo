@@ -1736,15 +1736,18 @@
         document.getElementById("contactForm").reset();
       } else {
         document.getElementById('successMessage').innerHTML = 'Error: ' + response.message;
+        document.getElementById("contactForm").reset();
       }
     } else {
       document.getElementById('successMessage').innerHTML = 'There was an error sending your message. Please try again later.';
+      document.getElementById("contactForm").reset();
     }
   };
 
   xhr.onerror = function () {
     console.error("XHR error occurred"); // ✅ Checkpoint
     document.getElementById('successMessage').innerHTML = 'There was an error sending your message. Please try again later.';
+    document.getElementById("contactForm").reset();
   };
 
   xhr.send(formData);
