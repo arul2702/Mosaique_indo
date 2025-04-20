@@ -93,93 +93,95 @@
     });
 
     //gallery container
+
     document.addEventListener('DOMContentLoaded', () => {
+      const imageData = [
+        { src: './assests/images/gal1.png', caption: '職場' },
+        { src: './assests/images/gal2.png', caption: 'IoTプロジェクト' },
+        { src: './assests/images/gal3.jpeg', caption: '卒業生の結婚式へ参加' },
+        { src: './assests/images/gal4.jpeg', caption: '日本からのゲストとディナー' },
+        { src: './assests/images/gal5.jpeg', caption: '卒業生たちと日本でスキー' },
+        { src: './assests/images/gal6.jpeg', caption: '大学訪問' },
+        { src: './assests/images/gal7.jpeg', caption: '大学訪問' },
+        { src: './assests/images/gal8.jpeg', caption: '社員旅行' },
+        { src: './assests/images/gal9.jpeg', caption: '日本の祭り' },
+        { src: './assests/images/gal10.jpeg', caption: '卒業式' },
+        { src: './assests/images/gal11.png', caption: '会社でパーティー' },
+        { src: './assests/images/gal12.jpeg', caption: '日本食' },
+        { src: './assests/images/gal13.jpeg', caption: 'お絵描き' },
+        { src: './assests/images/gal14.jpeg', caption: '日本語クラス' },
+        { src: './assests/images/gal15.jpeg', caption: '自動車整備' },
+        { src: './assests/images/gal16.jpeg', caption: '小学校で日本語教室' },
+        { src: './assests/images/gal17.jpeg', caption: 'NX CAD練習中' }
+      ];
+    
       const track = document.querySelector('.gallery-slide-track');
       const prevBtn = document.querySelector('.gallery-prev-btn');
       const nextBtn = document.querySelector('.gallery-next-btn');
-      let slides = document.querySelectorAll('.gallery-slide-item');
     
-      let currentIndex = 0;
-      let slideWidth = slides[0].offsetWidth;
-      let interval;
+      function createSlide({ src, caption }) {
+        const item = document.createElement('div');
+        item.className = 'gallery-slide-item';
+        item.innerHTML = `
+          <div class="gallery-slide-inner">
+            <img src="${src}" alt="${caption}">
+            <p class="gallery-caption text-center">${caption}</p>
+          </div>`;
+        return item;
+      }
+    
+      const originalSlides = imageData.map(createSlide);
+      const firstClones = originalSlides.slice(0, 2).map(s => s.cloneNode(true));
+      const lastClones = originalSlides.slice(-2).map(s => s.cloneNode(true));
+    
+      lastClones.forEach(s => track.appendChild(s));
+      originalSlides.forEach(s => track.appendChild(s));
+      firstClones.forEach(s => track.appendChild(s));
+    
+      let currentIndex = 2;
+      let slideWidth = originalSlides[0].offsetWidth;
       let isTransitioning = false;
     
-      function setInitialPosition() {
-        slideWidth = slides[0].offsetWidth;
-        track.style.transition = 'none';
+      const updatePosition = (withTransition = true) => {
+        track.style.transition = withTransition ? 'transform 0.5s ease' : 'none';
         track.style.transform = `translateX(-${slideWidth * currentIndex}px)`;
-      }
+      };
     
-      setTimeout(setInitialPosition, 50);
-    
-      function moveToSlide(index, withTransition = true) {
+      const moveToSlide = (index) => {
         if (isTransitioning) return;
         isTransitioning = true;
-    
-        if (withTransition) {
-          track.style.transition = 'transform 0.6s ease';
-        } else {
-          track.style.transition = 'none';
-        }
-    
         currentIndex = index;
-        track.style.transform = `translateX(-${slideWidth * index}px)`;
-      }
-    
-      function fadeJump(index) {
-        track.style.transition = 'opacity 0.4s ease';
-        track.style.opacity = '0';
-        setTimeout(() => {
-          moveToSlide(index, false);
-          track.style.transition = 'opacity 0.4s ease';
-          track.style.opacity = '1';
-        }, 400);
-      }
-    
-      function goToNext() {
-        if (currentIndex < slides.length - 1) {
-          moveToSlide(currentIndex + 1);
-        } else {
-          fadeJump(0); // Loop to first
-        }
-      }
-    
-      function goToPrev() {
-        if (currentIndex > 0) {
-          moveToSlide(currentIndex - 1);
-        } else {
-          fadeJump(slides.length - 1); // Loop to last
-        }
-      }
-    
-      nextBtn.addEventListener('click', goToNext);
-      prevBtn.addEventListener('click', goToPrev);
+        updatePosition(true);
+      };
     
       track.addEventListener('transitionend', () => {
         isTransitioning = false;
+        if (currentIndex >= imageData.length + 2) {
+          currentIndex = 2;
+          updatePosition(false);
+        } else if (currentIndex <= 1) {
+          currentIndex = imageData.length + 1;
+          updatePosition(false);
+        }
       });
     
-      // Auto slide
-      function startAutoSlide() {
-        interval = setInterval(goToNext, 3000);
-      }
+      prevBtn.addEventListener('click', () => moveToSlide(currentIndex - 1));
+      nextBtn.addEventListener('click', () => moveToSlide(currentIndex + 1));
     
-      function stopAutoSlide() {
-        clearInterval(interval);
-      }
+      let autoSlide = setInterval(() => moveToSlide(currentIndex + 1), 3000);
+      track.addEventListener('mouseenter', () => clearInterval(autoSlide));
+      track.addEventListener('mouseleave', () => autoSlide = setInterval(() => moveToSlide(currentIndex + 1), 3000));
     
-      track.addEventListener('mouseenter', stopAutoSlide);
-      track.addEventListener('mouseleave', startAutoSlide);
-      window.addEventListener('resize', setInitialPosition);
+      window.addEventListener('resize', () => {
+        slideWidth = document.querySelector('.gallery-slide-item').offsetWidth;
+        updatePosition(false);
+      });
     
-      startAutoSlide();
+      setTimeout(() => {
+        slideWidth = document.querySelector('.gallery-slide-item').offsetWidth;
+        updatePosition(false);
+      }, 50);
     });
-    
-    document.addEventListener('DOMContentLoaded', () => {
-      ['slide1.jpg', 'slide2.jpg', 'slide3.png'].forEach(src => {
-          new Image().src = `./assests/images/${src}`;
-      });
-  });
     
   </script>
   <!-- End Google Tag Manager -->
@@ -819,115 +821,17 @@
           </div>
         </div>
       </div>
-      <div class="gallery-slide-container mt-5">
+      <div class="gallery-container mt-5">
         <h2 class="text-center" style="font-weight:400;padding:20px">ギャラリー</h2>
-        <div class="gallery-slide-track">
-          <div class="gallery-slide-item">
-            <div class="gallery-slide-inner">
-              <img src="./assests/images/gal1.png" alt="gallery">
-              <p class="gallery-caption text-center">職場</p>
-            </div>
-          </div>
-          <div class="gallery-slide-item">
-            <div class="gallery-slide-inner">
-              <img src="./assests/images/gal2.png" alt="IOT Project">
-              <p class="gallery-caption text-center">IoT プロジェクト</p>
-            </div>
-          </div>
-          <div class="gallery-slide-item">
-            <div class="gallery-slide-inner">
-              <img src="./assests/images/gal3.jpeg" alt="gallery">
-              <p class="gallery-caption text-center">職場</p>
-            </div>
-          </div>
-          <div class="gallery-slide-item">
-            <div class="gallery-slide-inner">
-              <img src="./assests/images/gal4.jpeg" alt="IOT Project">
-              <p class="gallery-caption text-center">IoT プロジェクト</p>
-            </div>
-          </div>
-          <div class="gallery-slide-item">
-            <div class="gallery-slide-inner">
-              <img src="./assests/images/gal5.jpeg" alt="IOT Project">
-              <p class="gallery-caption text-center">IoT プロジェクト</p>
-            </div>
-          </div>
-          <div class="gallery-slide-item">
-            <div class="gallery-slide-inner">
-              <img src="./assests/images/gal6.jpeg" alt="IOT Project">
-              <p class="gallery-caption text-center">IoT プロジェクト</p>
-            </div>
-          </div>
-          <div class="gallery-slide-item">
-            <div class="gallery-slide-inner">
-              <img src="./assests/images/gal7.jpeg" alt="IOT Project">
-              <p class="gallery-caption text-center">IoT プロジェクト</p>
-            </div>
-          </div>
-          <div class="gallery-slide-item">
-            <div class="gallery-slide-inner">
-              <img src="./assests/images/gal8.jpeg" alt="IOT Project">
-              <p class="gallery-caption text-center">IoT プロジェクト</p>
-            </div>
-          </div>
-          <div class="gallery-slide-item">
-            <div class="gallery-slide-inner">
-              <img src="./assests/images/gal9.jpeg" alt="IOT Project">
-              <p class="gallery-caption text-center">IoT プロジェクト</p>
-            </div>
-          </div>
-          <div class="gallery-slide-item">
-            <div class="gallery-slide-inner">
-              <img src="./assests/images/gal10.jpeg" alt="IOT Project">
-              <p class="gallery-caption text-center">IoT プロジェクト</p>
-            </div>
-          </div>
-          <div class="gallery-slide-item">
-            <div class="gallery-slide-inner">
-              <img src="./assests/images/gal11.png" alt="IOT Project">
-              <p class="gallery-caption text-center">IoT プロジェクト</p>
-            </div>
-          </div>
-          <div class="gallery-slide-item">
-            <div class="gallery-slide-inner">
-              <img src="./assests/images/gal12.jpeg" alt="IOT Project">
-              <p class="gallery-caption text-center">IoT プロジェクト</p>
-            </div>
-          </div>
-          <div class="gallery-slide-item">
-            <div class="gallery-slide-inner">
-              <img src="./assests/images/gal13.jpeg" alt="IOT Project">
-              <p class="gallery-caption text-center">IoT プロジェクト</p>
-            </div>
-          </div>
-          <div class="gallery-slide-item">
-            <div class="gallery-slide-inner">
-              <img src="./assests/images/gal14.jpeg" alt="IOT Project">
-              <p class="gallery-caption text-center">IoT プロジェクト</p>
-            </div>
-          </div>
-          <div class="gallery-slide-item">
-            <div class="gallery-slide-inner">
-              <img src="./assests/images/gal15.jpeg" alt="IOT Project">
-              <p class="gallery-caption text-center">IoT プロジェクト</p>
-            </div>
-          </div>
-          <div class="gallery-slide-item">
-            <div class="gallery-slide-inner">
-              <img src="./assests/images/gal16.jpeg" alt="IOT Project">
-              <p class="gallery-caption text-center">IoT プロジェクト</p>
-            </div>
-          </div>
-          <div class="gallery-slide-item">
-            <div class="gallery-slide-inner">
-              <img src="./assests/images/gal17.jpeg" alt="IOT Project">
-              <p class="gallery-caption text-center">IoT プロジェクト</p>
-            </div>
+        <button class="gallery-nav-btn gallery-prev-btn">&#10094;</button>
+        <div class="gallery-viewport">
+          <div class="gallery-slide-track">
+            <!-- Slides will be populated by JavaScript for infinite loop -->
           </div>
         </div>
-        <button class="gallery-nav-btn gallery-prev-btn">←</button>
-        <button class="gallery-nav-btn gallery-next-btn">→</button>
+        <button class="gallery-nav-btn gallery-next-btn">&#10095;</button>
       </div>
+
     </section>
     <section id="graduate" style="margin-bottom:60px;">
       <div class="graduates screen_width pt-5">
@@ -1087,8 +991,8 @@
             </div>
             <div class="employee-card-back">
               <div class="content-wrapper">
-                <h3>Hiro Ishida</h3>
-                <p class="employee-card-role">Founder</p>
+                <h3>石田浩幸</h3>
+                <p class="employee-card-role">創設者</p>
                 <img src=".\assests\images\smile-bg.png" width="100px">
               </div>
               <a href="https://www.linkedin.com/in/hiro-ishida-3975b934/" class="social-icon-linkedin" target="_blank">
@@ -1106,10 +1010,11 @@
             </div>
             <div class="employee-card-back">
               <div class="content-wrapper">
-                <h3>Shun Takahashi</h3>
-                <p class="employee-card-role">Business Development Manager & <br> Language Teacher</p>
-                <p class="employee-card-para">Drives company growth by building strategic partnerships while also teaching language skills to bridge cultural gaps.</p>
-                <p class="employee-card-quote">“Believe you can and you're halfway there.”</p>
+                <h3>髙橋駿</h3>
+                <p class="employee-card-role">ビジネス開発マネージャー＆<br> 語学教師</p>
+                <p class="employee-card-para">戦略的なパートナーシップを構築し、文化のギャップを埋めるための語学スキルを教えることで、会社の成長を促進します。</p>
+                <p class="employee-card-quote">「できると信じれば、半分は成功したも同然だ。」
+                </p>
               </div>
               <a href="https://www.linkedin.com/in/%E9%A7%BF-%E9%AB%99%E6%A9%8B-a656a2325/" class="social-icon-linkedin" target="_blank">
                 <i class="fab fa-linkedin icon-top"></i>
@@ -1126,11 +1031,11 @@
             </div>
             <div class="employee-card-back">
               <div class="content-wrapper">
-                <h3>Yogavarshini V</h3>
-                <p class="employee-card-role">Accounts and Administrator</p>
-                <p class="employee-card-para">Financial analysis|maintaining confidentiality and adhering to ethical standards in financial practices.</p>
-                <p class="employee-card-quote">“An unexamined life is not worth living!”</p>
-                <h4>N5 Level</h4>
+                <h3>ヨガヴァルシニ V</h3>
+                <p class="employee-card-role">アカウントと管理者</p>
+                <p class="employee-card-para">財務分析|財務実務における機密保持と倫理基準の遵守。</p>
+                <p class="employee-card-quote">「吟味されない人生は生きる価値がない！」</p>
+                <h4>N5レベル</h4>
               </div>
               <a href="https://www.linkedin.com/in/yogavarshini-v-89b0601a0/" class="social-icon-linkedin" target="_blank">
                 <i class="fab fa-linkedin icon-top"></i>
@@ -1143,122 +1048,17 @@
         <div class="employee-card">
           <div class="employee-card-inner">
             <div class="employee-card-front">
-              <img src=".\assests\images\emp-default.png" alt="Employee 1">
+              <img src=".\assests\images\emp-lalitha2.jpg" alt="Employee 1">
             </div>
             <div class="employee-card-back">
               <div class="content-wrapper">
-                <h3>Lalitha Sundareswaran</h3>
-                <p class="employee-card-role">General Admin and Japanese Teacher</p>
-                <p class="employee-card-para">Office Management | Language Instruction | Google Sheets/Excel | HR Support</p>
-                <p class="employee-card-quote">“Find joy in the journey, not just the destination.”</p>
-                <h4>N3 Level</h4>
+                <h3>ラリタ・スンダレスワラン</h3>
+                <p class="employee-card-role">一般事務 ＆ 日本語教師</p>
+                <p class="employee-card-para">オフィスマネジメント｜語学指導｜Googleスプレッドシート／Excel｜人事サポート</p>
+                <p class="employee-card-quote">「目的地だけでなく、旅そのものに喜びを見つけましょう。」</p>
+                <h4>N3レベル</h4>
               </div>
               <a href="https://www.linkedin.com/in/yogavarshini-v-89b0601a0/" class="social-icon-linkedin" target="_blank">
-                <i class="fab fa-linkedin icon-top"></i>
-                <i class="fab fa-linkedin icon-bottom"></i>
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <div class="employee-card">
-          <div class="employee-card-inner">
-            <div class="employee-card-front">
-              <img src=".\assests\images\emp-umakhesan1.jpg" alt="Employee 1">
-            </div>
-            <div class="employee-card-back">
-              <div class="content-wrapper">
-                <h3>Umakhesan Asokan</h3>
-                <p class="employee-card-role">Full Stack Developer</p>
-                <p class="employee-card-para">Financial analysis|maintaining confidentiality and adhering to ethical standards in financial practices.</p>
-                <p class="employee-card-quote">“No matter how dark the night, the dawn will always come.”</p>
-                <h4>N5 Level</h4>
-              </div>
-              <a href="https://www.linkedin.com/in/umakhesan-asokan-6ab287257/" class="social-icon-linkedin" target="_blank">
-                <i class="fab fa-linkedin icon-top"></i>
-                <i class="fab fa-linkedin icon-bottom"></i>
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <div class="employee-card">
-          <div class="employee-card-inner">
-            <div class="employee-card-front">
-              <img src=".\assests\images\emp-suman1.png" alt="Employee 1">
-            </div>
-            <div class="employee-card-back">
-              <div class="content-wrapper">
-                <h3>Suman Kannan</h3>
-                <p class="employee-card-role">Python Engineer</p>
-                <p class="employee-card-para">Python|Postgre_SQL|Machine Learning|DL|NLP|Artificial Intelligence|Tableau|IoT & Electronics</p>
-                <p class="employee-card-quote">“Don’t judge a book by its cover!”</p>
-                <h4>N5 Level</h4>
-              </div>
-              <a href="https://in.linkedin.com/in/suman-k-3964bb19a" class="social-icon-linkedin" target="_blank">
-                <i class="fab fa-linkedin icon-top"></i>
-                <i class="fab fa-linkedin icon-bottom"></i>
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <div class="employee-card">
-          <div class="employee-card-inner">
-            <div class="employee-card-front">
-              <img src=".\assests\images\emp-harish.jpeg" alt="Employee 1">
-            </div>
-            <div class="employee-card-back">
-              <div class="content-wrapper">
-                <h3>Harishwaran R</h3>
-                <p class="employee-card-role">Technical Engineer</p>
-                <p class="employee-card-para">CAD design (solidwork)|Proficient Manufacturing|Experience in welding|Additive manufacturing</p>
-                <p class="employee-card-quote">“Stay weird Be unique!”</p>
-                <h4>N5 Level</h4>
-              </div>
-              <a href="https://www.linkedin.com/in/harishwaran-r-301140187/" class="social-icon-linkedin" target="_blank">
-                <i class="fab fa-linkedin icon-top"></i>
-                <i class="fab fa-linkedin icon-bottom"></i>
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <div class="employee-card">
-          <div class="employee-card-inner">
-            <div class="employee-card-front">
-              <img src=".\assests\images\emp-sai1.jpg" alt="Employee 1">
-            </div>
-            <div class="employee-card-back">
-              <div class="content-wrapper">
-                <h3>Sai Murali</h3>
-                <p class="employee-card-role">IOT Engineer</p>
-                <p class="employee-card-para">Python, C, embedded, IOT, Proteous, Electronics, Hardware Assembly and Testing</p>
-                <p class="employee-card-quote">“We should make the most of life. Enjoy it!”</p>
-                <h4>N4 Level</h4>
-              </div>
-              <a href="https://www.linkedin.com/in/%E3%82%B5%E3%82%A4%E3%83%BB%E3%83%A0%E3%83%A9%E3%83%AA%E3%83%80%E3%83%A9%E3%83%B3-r-74a110213/" class="social-icon-linkedin" target="_blank">
-                <i class="fab fa-linkedin icon-top"></i>
-                <i class="fab fa-linkedin icon-bottom"></i>
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <div class="employee-card">
-          <div class="employee-card-inner">
-            <div class="employee-card-front">
-              <img src=".\assests\images\emp-bala.jpg" alt="Employee 1">
-            </div>
-            <div class="employee-card-back">
-              <div class="content-wrapper">
-                <h3>Bala Manikandan</h3>
-                <p class="employee-card-role">Full stack developer</p>
-                <p class="employee-card-para">Phyton, Html css javascript, MySQL, Postgres SQL, PHP, Java, React.</p>
-                <p class="employee-card-quote">“Face the storm, and you’ll find your strength.”</p>
-                <h4>N4 Level</h4>
-              </div>
-              <a href="https://www.linkedin.com/in/bala-manikandan-v-5a9b39190/>" class="social-icon-linkedin" target="_blank">
                 <i class="fab fa-linkedin icon-top"></i>
                 <i class="fab fa-linkedin icon-bottom"></i>
               </a>
@@ -1273,11 +1073,11 @@
             </div>
             <div class="employee-card-back">
               <div class="content-wrapper">
-                <h3>Manisha Gupta</h3>
-                <p class="employee-card-role">Project Administrator</p>
-                <p class="employee-card-para">Market Research|Digital marketing</p>
-                <p class="employee-card-quote">“You don't have to be great to start, but you have to start to be great!”.</p>
-                <h4>N3 Level</h4>
+                <h3> マニシャ・グプタ</h3>
+                <p class="employee-card-role">プロジェクト管理者</p>
+                <p class="employee-card-para">市場調査｜デジタルマーケティング</p>
+                <p class="employee-card-quote">「始めるのに偉大である必要はない、しかし偉大になるためには始めなければならない。」</p>
+                <h4>N3レベル</h4>
               </div>
               <a href="https://www.linkedin.com/in/manisha-gupta-432670203/" class="social-icon-linkedin" target="_blank">
                 <i class="fab fa-linkedin icon-top"></i>
@@ -1294,34 +1094,13 @@
             </div>
             <div class="employee-card-back">
               <div class="content-wrapper">
-                <h3>Sonal Dalal</h3>
-                <p class="employee-card-role">HR and Admin</p>
-                <p class="employee-card-para"> Manages recruitment | employee relations | Admin handles office operations</p>
-                <p class="employee-card-quote">“Stand tall and shake the heavens!”.</p>
-                <h4>N3 Level</h4>
+                <h3>ソナル・ダラル</h3>
+                <p class="employee-card-role">人事・総務</p>
+                <p class="employee-card-para"> 採用管理｜従業員関係｜総務はオフィス業務を担当</p>
+                <p class="employee-card-quote">「高く立ち、天を揺るがせ！」</p>
+                <h4>N3レベル</h4>
               </div>
               <a href="https://www.linkedin.com/in/sonaldalal/" class="social-icon-linkedin" target="_blank">
-                <i class="fab fa-linkedin icon-top"></i>
-                <i class="fab fa-linkedin icon-bottom"></i>
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <div class="employee-card">
-          <div class="employee-card-inner">
-            <div class="employee-card-front">
-              <img src=".\assests\images\emp-pooja1.jpg" alt="Employee 1">
-            </div>
-            <div class="employee-card-back">
-              <div class="content-wrapper">
-                <h3>Pooja Shree</h3>
-                <p class="employee-card-role">Technical Engineer</p>
-                <p class="employee-card-para"> Nx CAD | Ansys | MATLAB | CatiaV5</p>
-                <p class="employee-card-quote">“One more step. I have more in me”.</p>
-                <h4>N4 Level</h4>
-              </div>
-              <a href="https://www.linkedin.com/in/poojashree-hj-101370227/" class="social-icon-linkedin" target="_blank">
                 <i class="fab fa-linkedin icon-top"></i>
                 <i class="fab fa-linkedin icon-bottom"></i>
               </a>
@@ -1336,13 +1115,193 @@
             </div>
             <div class="employee-card-back">
               <div class="content-wrapper">
-                <h3>zahid Ahmed</h3>
-                <p class="employee-card-role">Bilingual Accountant</p>
-                <p class="employee-card-para">Maintains financial records | processes invoices/payments | manages payroll</p>
-                <p class="employee-card-quote">“Every day is a chance to be better”.</p>
-                <h4>N4 Level</h4>
+                <h3>ザヒド・アフメド</h3>
+                <p class="employee-card-role">バイリンガル会計士</p>
+                <p class="employee-card-para">財務記録を維持｜請求書・支払いの処理｜給与計算を管理</p>
+                <p class="employee-card-quote">「毎日がより良くなるチャンスだ。」</p>
+                <h4>N4レベル</h4>
               </div>
               <a href="https://www.linkedin.com/in/zahid-ahmed-819343aa/" class="social-icon-linkedin" target="_blank">
+                <i class="fab fa-linkedin icon-top"></i>
+                <i class="fab fa-linkedin icon-bottom"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="employee-card">
+          <div class="employee-card-inner">
+            <div class="employee-card-front">
+              <img src=".\assests\images\emp-umakhesan1.jpg" alt="Employee 1">
+            </div>
+            <div class="employee-card-back">
+              <div class="content-wrapper">
+                <h3>ウマケサン・アソカン</h3>
+                <p class="employee-card-role">フルスタック開発者</p>
+                <p class="employee-card-para">Vuejs|Reactjs|PHP|
+                  Javascript|MySQL|SQL|
+                  HTML|CSS|Laravel|
+                  Typescript|Github|Wordpress</p>
+                <p class="employee-card-quote">「どんなに暗い夜でも、夜明けは必ず来る。」</p>
+                <h4>N5レベル</h4>
+              </div>
+              <a href="https://www.linkedin.com/in/umakhesan-asokan-6ab287257/" class="social-icon-linkedin" target="_blank">
+                <i class="fab fa-linkedin icon-top"></i>
+                <i class="fab fa-linkedin icon-bottom"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="employee-card">
+          <div class="employee-card-inner">
+            <div class="employee-card-front">
+              <img src=".\assests\images\emp-suman1.png" alt="Employee 1">
+            </div>
+            <div class="employee-card-back">
+              <div class="content-wrapper">
+                <h3>スマン・カンナン</h3>
+                <p class="employee-card-role">パイソンエンジニア</p>
+                <p class="employee-card-para">Python|Postgre_SQL|Machine Learning|DL|NLP|Artificial Intelligence|Tableau|IoT & Electronics</p>
+                <p class="employee-card-quote">「見た目で物事を判断してはいけません！」</p>
+                <h4>N5レベル</h4>
+              </div>
+              <a href="https://in.linkedin.com/in/suman-k-3964bb19a" class="social-icon-linkedin" target="_blank">
+                <i class="fab fa-linkedin icon-top"></i>
+                <i class="fab fa-linkedin icon-bottom"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+        
+        <div class="employee-card">
+          <div class="employee-card-inner">
+            <div class="employee-card-front">
+              <img src=".\assests\images\emp-pavithra1.jpg" alt="Employee 1">
+            </div>
+            <div class="employee-card-back">
+              <div class="content-wrapper">
+                <h3>パヴィトラ・シェッティ・V</h3>
+                <p class="employee-card-role">フルスタック開発者</p>
+                <p class="employee-card-para">Vuejs|Reactjs|Flutter|PHP|
+                  Javascript|Jquery|MySQL|SQL|
+                  HTML|CSS|SCSS|Laravel|
+                  Typescript|Github|Shopify|
+                  PrimeReact|Basics of golang 
+                  Wordpress|HandsOnTable|
+                  PhpMyAdmin</p>
+                <!-- <p class="employee-card-quote">“Don’t judge a book by its cover!”</p> -->
+                <!-- <h4>N5 Level</h4> -->
+              </div>
+              <a href="https://www.linkedin.com/in/pavithra-shetty-a00400113/" class="social-icon-linkedin" target="_blank">
+                <i class="fab fa-linkedin icon-top"></i>
+                <i class="fab fa-linkedin icon-bottom"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="employee-card">
+          <div class="employee-card-inner">
+            <div class="employee-card-front">
+              <img src=".\assests\images\emp-harish.jpeg" alt="Employee 1">
+            </div>
+            <div class="employee-card-back">
+              <div class="content-wrapper">
+                <h3>ハリシュワラン・R</h3>
+                <p class="employee-card-role">テクニカルエンジニア</p>
+                <p class="employee-card-para">CAD design (solidwork)|Proficient Manufacturing|Experience in welding|Additive manufacturing</p>
+                <p class="employee-card-quote">「変わっていていい、自分らしくいよう！」</p>
+                <h4>N5レベル</h4>
+              </div>
+              <a href="https://www.linkedin.com/in/harishwaran-r-301140187/" class="social-icon-linkedin" target="_blank">
+                <i class="fab fa-linkedin icon-top"></i>
+                <i class="fab fa-linkedin icon-bottom"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="employee-card">
+          <div class="employee-card-inner">
+            <div class="employee-card-front">
+              <img src=".\assests\images\emp-pooja1.jpg" alt="Employee 1">
+            </div>
+            <div class="employee-card-back">
+              <div class="content-wrapper">
+                <h3>プージャ・シュリー</h3>
+                <p class="employee-card-role">テクニカルエンジニア</p>
+                <p class="employee-card-para"> Nx CAD | Ansys | MATLAB | CatiaV5</p>
+                <p class="employee-card-quote">「もう一歩。まだ自分には力が残っている。」</p>
+                <h4>N4レベル</h4>
+              </div>
+              <a href="https://www.linkedin.com/in/poojashree-hj-101370227/" class="social-icon-linkedin" target="_blank">
+                <i class="fab fa-linkedin icon-top"></i>
+                <i class="fab fa-linkedin icon-bottom"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="employee-card">
+          <div class="employee-card-inner">
+            <div class="employee-card-front">
+              <img src=".\assests\images\emp-sai1.jpg" alt="Employee 1">
+            </div>
+            <div class="employee-card-back">
+              <div class="content-wrapper">
+                <h3>サイ・ムラリ</h3>
+                <p class="employee-card-role">IoTエンジニア</p>
+                <p class="employee-card-para">Python, C, embedded, IOT, Proteous, Electronics, Hardware Assembly and Testing</p>
+                <p class="employee-card-quote">「人生を最大限に楽しむべきだ。思いっきり楽しもう！」</p>
+                <h4>N4レベル</h4>
+              </div>
+              <a href="https://www.linkedin.com/in/%E3%82%B5%E3%82%A4%E3%83%BB%E3%83%A0%E3%83%A9%E3%83%AA%E3%83%80%E3%83%A9%E3%83%B3-r-74a110213/" class="social-icon-linkedin" target="_blank">
+                <i class="fab fa-linkedin icon-top"></i>
+                <i class="fab fa-linkedin icon-bottom"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="employee-card">
+          <div class="employee-card-inner">
+            <div class="employee-card-front">
+              <img src=".\assests\images\emp-bala.jpg" alt="Employee 1">
+            </div>
+            <div class="employee-card-back">
+              <div class="content-wrapper">
+                <h3>バラ・マニカンダン</h3>
+                <p class="employee-card-role">フルスタック開発者</p>
+                <p class="employee-card-para">Phyton, Html , css , javascript, MySQL, Postgres SQL, PHP, Java, React.</p>
+                <p class="employee-card-quote">「嵐に立ち向かえば、自分の力が見つかる。」</p>
+                <h4>N4レベル</h4>
+              </div>
+              <a href="https://www.linkedin.com/in/bala-manikandan-v-5a9b39190/>" class="social-icon-linkedin" target="_blank">
+                <i class="fab fa-linkedin icon-top"></i>
+                <i class="fab fa-linkedin icon-bottom"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="employee-card">
+          <div class="employee-card-inner">
+            <div class="employee-card-front">
+              <img src=".\assests\images\emp-default.png" alt="Employee 1">
+            </div>
+            <div class="employee-card-back">
+              <div class="content-wrapper">
+                <h3>ニランジャナ・R・ピライ</h3>
+                <p class="employee-card-role">ブリッジフルスタック開発者                </p>
+                <p class="employee-card-para">Vuejs|Reactjs|PHP|
+                  Javascript|MySQL|SQL|
+                  HTML|CSS|Laravel|MongoDB 
+                  </p>
+                <p class="employee-card-quote">「希望こそが私たちを強くする。それが私たちがここにいる理由だ。」</p>
+                <h4>N3レベル</h4>
+              </div>
+              <a href="https://www.linkedin.com/in/niranjana-r-pillai-025173143/" class="social-icon-linkedin" target="_blank">
                 <i class="fab fa-linkedin icon-top"></i>
                 <i class="fab fa-linkedin icon-bottom"></i>
               </a>
